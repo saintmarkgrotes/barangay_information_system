@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <title>Barangay Settings - Admin Panel</title>
+{% endblock %}
+
+{% block content %}
+    <main class="w-full min-h-screen px-4 py-20 sm:px-6 lg:px-8 lg:py-10">
+        <div class="mx-auto max-w-4xl">
+            <!-- Back Button -->
+            <a 
+                href="{{ url_for('certificates.admin_certificates') }}"
+                class="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-gray-600 transition-colors hover:text-blue-600 sm:mb-6 sm:text-base">
+                <span>←</span> Back to Certificate Management
+            </a>
+
+            <!-- Form Header -->
+            <div class="mb-6 overflow-hidden rounded-2xl bg-white shadow-lg sm:mb-8">
+                <div class="border-b-4 border-blue-600 bg-gradient-to-r from-blue-50 to-cyan-50 px-6 py-5 sm:px-8 sm:py-6">
+                    <h1 class="text-2xl font-bold text-gray-800 sm:text-3xl">⚙️ Barangay Settings</h1>
+                    <p class="mt-2 text-sm text-gray-600 sm:text-base">
+                        Configure barangay information for certificate generation
+                    </p>
+                </div>
+
+                <!-- Settings Form -->
+                <form method="POST" action="{{ url_for('certificates.barangay_settings') }}" class="p-6 sm:p-8">
+                    <div class="space-y-8">
+                        <!-- Barangay Information Section -->
+                        <div>
+                            <h2 class="mb-4 text-xl font-bold text-gray-800">Barangay Information</h2>
+                            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                                <div class="sm:col-span-2">
+                                    <label class="mb-2 block text-sm font-semibold text-gray-700">
+                                        Barangay Name <span class="text-red-500">*</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        name="barangay_name" 
+                                        value="{{ settings.barangay_name if settings else '' }}"
+                                        required
+                                        placeholder="Barangay San Jose"
+                                        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                                </div>
+
+                                <div>
+                                    <label class="mb-2 block text-sm font-semibold text-gray-700">
+                                        Municipality/City <span class="text-red-500">*</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        name="municipality" 
+                                        value="{{ settings.municipality if settings else '' }}"
+                                        required
+                                        placeholder="Calbayog City"
+                                        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                                </div>
+
+                                <div>
+                                    <label class="mb-2 block text-sm font-semibold text-gray-700">
+                                        Province <span class="text-red-500">*</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        name="province" 
+                                        value="{{ settings.province if settings else '' }}"
+                                        required
+                                        placeholder="Samar"
+                                        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                                </div>
+
+                                <div class="sm:col-span-2">
+                                    <label class="mb-2 block text-sm font-semibold text-gray-700">
+                                        Region <span class="text-red-500">*</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        name="region" 
+                                        value="{{ settings.region if settings else '' }}"
+                                        required
+                                        placeholder="Region VIII (Eastern Visayas)"
+                                        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact Information Section -->
+                        <div>
+                            <h2 class="mb-4 text-xl font-bold text-gray-800">Contact Information</h2>
+                            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                                <div>
+                                    <label class="mb-2 block text-sm font-semibold text-gray-700">
+                                        Contact Number
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        name="contact_number" 
+                                        value="{{ settings.contact_number if settings else '' }}"
+                                        placeholder="+63 912 345 6789"
+                                        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                                </div>
+
+                                <div>
+                                    <label class="mb-2 block text-sm font-semibold text-gray-700">
+                                        Email Address
+                                    </label>
+                                    <input 
+                                        type="email" 
+                                        name="email_address" 
+                                        value="{{ settings.email_address if settings else '' }}"
+                                        placeholder="barangay@example.com"
+                                        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Officials Section -->
+                        <div>
+                            <h2 class="mb-4 text-xl font-bold text-gray-800">Barangay Officials</h2>
+                            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                                <div class="sm:col-span-2">
+                                    <label class="mb-2 block text-sm font-semibold text-gray-700">
+                                        Barangay Captain <span class="text-red-500">*</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        name="captain_name" 
+                                        value="{{ settings.captain_name if settings else '' }}"
+                                        required
+                                        placeholder="Juan Dela Cruz"
+                                        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                                    <p class="mt-1 text-xs text-gray-500">
+                                        Full name of the current Barangay Captain/Punong Barangay
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <label class="mb-2 block text-sm font-semibold text-gray-700">
+                                        Barangay Secretary
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        name="secretary_name" 
+                                        value="{{ settings.secretary_name if settings else '' }}"
+                                        placeholder="Maria Santos"
+                                        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                                </div>
+
+                                <div>
+                                    <label class="mb-2 block text-sm font-semibold text-gray-700">
+                                        Barangay Treasurer
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        name="treasurer_name" 
+                                        value="{{ settings.treasurer_name if settings else '' }}"
+                                        placeholder="Pedro Reyes"
+                                        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Information Box -->
+                        <div class="rounded-xl bg-blue-50 p-5">
+                            <div class="flex gap-3">
+                                <div class="text-2xl">ℹ️</div>
+                                <div class="text-sm text-blue-900">
+                                    <p class="font-semibold">Important Notes:</p>
+                                    <ul class="mt-2 list-inside list-disc space-y-1 text-blue-800">
+                                        <li>This information will appear on all generated certificates</li>
+                                        <li>Ensure all names are spelled correctly</li>
+                                        <li>Update this information when officials change</li>
+                                        <li>Required fields must be filled to generate certificates</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                        <a 
+                            href="{{ url_for('certificates.admin_certificates') }}"
+                            class="w-full rounded-full border border-gray-300 bg-white px-6 py-3 text-center text-sm font-bold text-gray-700 transition-all hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 sm:w-auto">
+                            Cancel
+                        </a>
+                        <button 
+                            type="submit"
+                            class="w-full rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:from-blue-700 hover:to-cyan-600 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto sm:min-w-[180px]">
+                            Save Settings
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+{% endblock %}

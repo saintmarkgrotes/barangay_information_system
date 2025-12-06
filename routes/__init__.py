@@ -7,6 +7,7 @@ from .residents import residents_bp
 from .officials import officials_bp
 from .households import households_bp
 from .settings import settings_bp
+from .certificates import certificates_bp
 
 __all__ = [
     'auth_bp',
@@ -15,4 +16,5 @@ __all__ = [
     'officials_bp',
     'households_bp',
     'settings_bp'
+    'certificates_bp'
 ]

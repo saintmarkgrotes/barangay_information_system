@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <title>Certificate Requests - Barangay Information System</title>
+{% endblock %}
+
+{% block content %}
+    <main class="w-full min-h-screen px-4 py-20 sm:px-6 lg:px-8 lg:py-10">
+        <div class="mx-auto max-w-7xl">
+            <!-- Page Header -->
+            <div class="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-blue-600 sm:text-4xl lg:text-5xl">
+                        Certificate Requests
+                    </h1>
+                    <p class="mt-2 text-sm text-gray-600 sm:text-base">
+                        Request and track your barangay certificates
+                    </p>
+                </div>
+                <a 
+                    href="{{ url_for('certificates.request_certificate') }}"
+                    class="w-full rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:from-blue-700 hover:to-cyan-600 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto sm:min-w-[200px]">
+                    + Request Certificate
+                </a>
+            </div>
+
+            <!-- Statistics Cards - Responsive -->
+            <div class="mb-6 grid grid-cols-2 gap-4 sm:mb-8 lg:grid-cols-4">
+                <!-- Total -->
+                <div class="overflow-hidden rounded-2xl bg-white shadow-md">
+                    <div class="p-5 text-center">
+                        <div class="text-3xl font-bold text-gray-800 sm:text-4xl">{{ stats.total }}</div>
+                        <div class="mt-1 text-xs font-medium uppercase tracking-wider text-gray-600 sm:text-sm">Total</div>
+                    </div>
+                </div>
+
+                <!-- Pending -->
+                <div class="overflow-hidden rounded-2xl bg-white shadow-md">
+                    <div class="p-5 text-center">
+                        <div class="text-3xl font-bold text-yellow-600 sm:text-4xl">{{ stats.pending }}</div>
+                        <div class="mt-1 text-xs font-medium uppercase tracking-wider text-gray-600 sm:text-sm">Pending</div>
+                    </div>
+                </div>
+
+                <!-- Approved -->
+                <div class="overflow-hidden rounded-2xl bg-white shadow-md">
+                    <div class="p-5 text-center">
+                        <div class="text-3xl font-bold text-green-600 sm:text-4xl">{{ stats.approved }}</div>
+                        <div class="mt-1 text-xs font-medium uppercase tracking-wider text-gray-600 sm:text-sm">Approved</div>
+                    </div>
+                </div>
+
+                <!-- Rejected -->
+                <div class="overflow-hidden rounded-2xl bg-white shadow-md">
+                    <div class="p-5 text-center">
+                        <div class="text-3xl font-bold text-red-600 sm:text-4xl">{{ stats.rejected }}</div>
+                        <div class="mt-1 text-xs font-medium uppercase tracking-wider text-gray-600 sm:text-sm">Rejected</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Requests List -->
+            <div class="overflow-hidden rounded-2xl bg-white shadow-lg">
+                <div class="border-b border-gray-200 bg-gradient-to-r from-blue-50 to-cyan-50 px-6 py-4">
+                    <h2 class="text-xl font-bold text-gray-800">Your Certificate Requests</h2>
+                </div>
+
+                <div class="divide-y divide-gray-200">
+                    {% for cert in requests %}
+                    <div class="p-5 transition-colors hover:bg-gray-50 sm:p-6">
+                        <!-- Mobile Layout -->
+                        <div class="flex flex-col gap-4 sm:hidden">
+                            <div class="flex items-start justify-between">
+                                <div class="min-w-0 flex-1">
+                                    <div class="text-lg font-bold text-gray-800">
+                                        {{ cert.certificate_type }}
+                                    </div>
+                                    <div class="mt-1 text-sm text-gray-600">
+                                        Ref: {{ cert.reference_number }}
+                                    </div>
+                                </div>
+                                <span class="ml-3 inline-flex flex-shrink-0 rounded-full px-3 py-1 text-xs font-bold uppercase
+                                    {% if cert.status == 'pending' %}bg-yellow-100 text-yellow-800
+                                    {% elif cert.status == 'approved' %}bg-green-100 text-green-800
+                                    {% elif cert.status == 'rejected' %}bg-red-100 text-red-800
+                                    {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                    {{ cert.status }}
+                                </span>
+                            </div>
+
+                            <div class="space-y-2 text-sm text-gray-600">
+                                <div><strong>Name:</strong> {{ cert.requester_name }}</div>
+                                <div><strong>Requested:</strong> {{ cert.requested_at.strftime('%b %d, %Y') }}</div>
+                                {% if cert.certificate_number %}
+                                <div><strong>Cert No:</strong> {{ cert.certificate_number }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="flex gap-2">
+                                <a 
+                                    href="{{ url_for('certificates.view_certificate', id=cert.id) }}"
+                                    class="flex-1 rounded-lg bg-blue-100 px-4 py-2 text-center text-sm font-bold text-blue-700 transition-colors hover:bg-blue-200">
+                                    View
+                                </a>
+                                {% if cert.status == 'approved' %}
+                                <a 
+                                    href="{{ url_for('certificates.print_certificate', id=cert.id) }}"
+                                    target="_blank"
+                                    class="flex-1 rounded-lg bg-green-100 px-4 py-2 text-center text-sm font-bold text-green-700 transition-colors hover:bg-green-200">
+                                    Print
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Desktop Layout -->
+                        <div class="hidden items-center gap-6 sm:flex">
+                            <div class="flex-1 space-y-1">
+                                <div class="text-lg font-bold text-gray-800">
+                                    {{ cert.certificate_type }}
+                                </div>
+                                <div class="text-sm text-gray-600">
+                                    {{ cert.requester_name }}
+                                </div>
+                                <div class="text-xs text-gray-500">
+                                    Ref: {{ cert.reference_number }}
+                                    {% if cert.certificate_number %}
+                                    | Cert No: {{ cert.certificate_number }}
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="flex-shrink-0 text-center">
+                                <div class="text-sm font-medium text-gray-600">Requested</div>
+                                <div class="text-sm text-gray-500">{{ cert.requested_at.strftime('%b %d, %Y') }}</div>
+                            </div>
+
+                            <span class="inline-flex flex-shrink-0 rounded-full px-4 py-2 text-xs font-bold uppercase
+                                {% if cert.status == 'pending' %}bg-yellow-100 text-yellow-800
+                                {% elif cert.status == 'approved' %}bg-green-100 text-green-800
+                                {% elif cert.status == 'rejected' %}bg-red-100 text-red-800
+                                {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                {{ cert.status }}
+                            </span>
+
+                            <div class="flex flex-shrink-0 gap-2">
+                                <a 
+                                    href="{{ url_for('certificates.view_certificate', id=cert.id) }}"
+                                    class="rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-2 text-sm font-bold text-white shadow-md transition-all hover:from-blue-700 hover:to-blue-800 hover:shadow-lg">
+                                    View
+                                </a>
+                                {% if cert.status == 'approved' %}
+                                <a 
+                                    href="{{ url_for('certificates.print_certificate', id=cert.id) }}"
+                                    target="_blank"
+                                    class="rounded-lg bg-gradient-to-r from-green-600 to-green-700 px-4 py-2 text-sm font-bold text-white shadow-md transition-all hover:from-green-700 hover:to-green-800 hover:shadow-lg">
+                                    Print
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="flex flex-col items-center justify-center p-12 text-center">
+                        <div class="mb-4 text-6xl opacity-30">📄</div>
+                        <p class="mb-2 text-xl font-semibold text-gray-800">No Certificate Requests Yet</p>
+                        <p class="mb-4 text-sm text-gray-600">Click the button above to request your first certificate</p>
+                        <a 
+                            href="{{ url_for('certificates.request_certificate') }}"
+                            class="rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:from-blue-700 hover:to-cyan-600 hover:shadow-xl">
+                            Request Certificate
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

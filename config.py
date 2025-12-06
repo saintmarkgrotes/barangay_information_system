@@ -8,6 +8,13 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SESSION_COOKIE_HTTPONLY = True
     PERMANENT_SESSION_LIFETIME = 3600
+
+    # Email settings
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 587
+    MAIL_USE_TLS = True
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     
     # File upload settings
     UPLOAD_FOLDER = 'static/uploads/elected_officials'

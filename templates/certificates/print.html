@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ certificate.certificate_type }} - {{ certificate.certificate_number }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            line-height: 1.6;
+            color: #000;
+            background: white;
+        }
+        
+        .certificate-container {
+            width: 210mm;
+            height: 297mm;
+            padding: 25mm;
+            position: relative;
+            background: white;
+        }
+        
+        .certificate-border {
+            border: 8px double #1e40af;
+            padding: 20mm;
+            height: 100%;
+            position: relative;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #1e40af;
+            padding-bottom: 20px;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+        }
+        
+        .republic {
+            font-size: 14px;
+            font-weight: normal;
+            margin-bottom: 3px;
+        }
+        
+        .office-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        .barangay-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1e40af;
+            margin-bottom: 5px;
+        }
+        
+        .address {
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .contact {
+            font-size: 11px;
+            color: #666;
+        }
+        
+        .certificate-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: #1e40af;
+            margin: 30px 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .certificate-number {
+            text-align: center;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .content {
+            margin: 30px 0;
+            text-align: justify;
+            font-size: 14px;
+            line-height: 2;
+        }
+        
+        .to-whom {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .indent {
+            text-indent: 50px;
+        }
+        
+        .name-highlight {
+            font-weight: bold;
+            text-transform: uppercase;
+            text-decoration: underline;
+        }
+        
+        .purpose-box {
+            margin: 25px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            background: #f9fafb;
+        }
+        
+        .purpose-label {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .signatures {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .signature-block {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .signature-line {
+            border-top: 2px solid #000;
+            margin-top: 50px;
+            padding-top: 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .signature-title {
+            font-size: 11px;
+            font-style: italic;
+        }
+        
+        .issued-date {
+            margin-top: 30px;
+            text-align: left;
+            font-size: 13px;
+        }
+        
+        .footer {
+            position: absolute;
+            bottom: 10mm;
+            left: 25mm;
+            right: 25mm;
+            text-align: center;
+            font-size: 10px;
+            color: #666;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .qr-code {
+            position: absolute;
+            bottom: 15mm;
+            right: 15mm;
+            width: 60px;
+            height: 60px;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            color: #999;
+        }
+        
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .no-print {
+                display: none;
+            }
+            
+            .certificate-container {
+                page-break-after: always;
+            }
+        }
+        
+        .print-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .print-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(30, 64, 175, 0.4);
+        }
+        
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 12px 24px;
+            background: white;
+            color: #1e40af;
+            border: 2px solid #1e40af;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 1000;
+            text-decoration: none;
+        }
+        
+        .back-button:hover {
+            background: #1e40af;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Print Controls -->
+    <a href="{{ url_for('certificates.view_certificate', id=certificate.id) }}" class="back-button no-print">
+        ← Back
+    </a>
+    <button onclick="window.print()" class="print-button no-print">
+        🖨️ Print Certificate
+    </button>
+
+    <!-- Certificate -->
+    <div class="certificate-container">
+        <div class="certificate-border">
+            <!-- Header -->
+            <div class="header">
+                <div class="logo">
+                    <!-- Placeholder for logo -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="#1e40af">
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="#1e40af" stroke-width="3"/>
+                        <text x="50" y="60" text-anchor="middle" font-size="40" font-weight="bold">B</text>
+                    </svg>
+                </div>
+                <div class="republic">Republic of the Philippines</div>
+                <div class="office-title">Office of the Barangay</div>
+                <div class="barangay-name">{{ settings.barangay_name or 'BARANGAY NAME' }}</div>
+                <div class="address">
+                    {{ settings.municipality or 'Municipality' }}, 
+                    {{ settings.province or 'Province' }}, 
+                    {{ settings.region or 'Region' }}
+                </div>
+                {% if settings.contact_number or settings.email_address %}
+                <div class="contact">
+                    {% if settings.contact_number %}Tel: {{ settings.contact_number }}{% endif %}
+                    {% if settings.contact_number and settings.email_address %} | {% endif %}
+                    {% if settings.email_address %}Email: {{ settings.email_address }}{% endif %}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Certificate Title -->
+            <div class="certificate-title">
+                {{ certificate.certificate_type }}
+            </div>
+
+            <div class="certificate-number">
+                Certificate No. {{ certificate.certificate_number }}
+            </div>
+
+            <!-- Content -->
+            <div class="content">
+                <div class="to-whom">TO WHOM IT MAY CONCERN:</div>
+
+                <p class="indent">
+                    This is to certify that 
+                    <span class="name-highlight">{{ certificate.requester_name }}</span>, 
+                    a resident of {{ certificate.requester_address }}, 
+                    is personally known to me.
+                </p>
+
+                {% if certificate.certificate_type == 'Certificate of Indigency' %}
+                <p class="indent">
+                    This further certifies that the above-named person belongs to an indigent family 
+                    and is in need of financial assistance as evidenced by the facts and circumstances 
+                    stated in the application.
+                </p>
+                {% elif certificate.certificate_type == 'Barangay Clearance' %}
+                <p class="indent">
+                    This further certifies that the bearer has no derogatory and/or criminal records 
+                    on file in this barangay and is a law-abiding citizen of good moral character and standing 
+                    in the community.
+                </p>
+                {% elif certificate.certificate_type == 'Certificate of Residency' %}
+                <p class="indent">
+                    This further certifies that the above-named person is a bona fide resident of this barangay 
+                    since birth/or for a considerable period of time and maintains good standing in the community.
+                </p>
+                {% elif certificate.certificate_type == 'Certificate of Good Moral' %}
+                <p class="indent">
+                    This further certifies that during his/her stay in this barangay, he/she has conducted 
+                    himself/herself in accordance with the laws and ordinances of this locality and has shown 
+                    good moral character and standing in the community.
+                </p>
+                {% endif %}
+
+                <div class="purpose-box">
+                    <div class="purpose-label">Purpose:</div>
+                    <div>{{ certificate.purpose }}</div>
+                </div>
+
+                <p class="indent">
+                    This certification is issued upon the request of the above-named person for whatever 
+                    legal purpose it may serve.
+                </p>
+            </div>
+
+            <!-- Issue Date -->
+            <div class="issued-date">
+                <strong>Issued this</strong> {{ certificate.issued_date.strftime('%d') }}<sup>
+                {% if certificate.issued_date.day in [1, 21, 31] %}st
+                {% elif certificate.issued_date.day in [2, 22] %}nd
+                {% elif certificate.issued_date.day in [3, 23] %}rd
+                {% else %}th{% endif %}
+                </sup> <strong>day of</strong> {{ certificate.issued_date.strftime('%B %Y') }}.
+            </div>
+
+            <!-- Signatures -->
+            <div class="signatures">
+                <div class="signature-block">
+                    <div class="signature-line">
+                        {{ settings.secretary_name or 'Barangay Secretary' }}
+                    </div>
+                    <div class="signature-title">Barangay Secretary</div>
+                </div>
+
+                <div class="signature-block">
+                    <div class="signature-line">
+                        {{ settings.captain_name or 'Punong Barangay' }}
+                    </div>
+                    <div class="signature-title">Punong Barangay</div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer">
+                Not valid without official seal | For verification, contact the Barangay Office
+                <br>
+                Reference: {{ certificate.reference_number }}
+            </div>
+
+            <!-- QR Code Placeholder -->
+            <div class="qr-code">
+                QR Code
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-print on load (optional)
+        // window.onload = function() { window.print(); }
+    </script>
+</body>
+</html>

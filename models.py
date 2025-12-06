@@ -98,3 +98,88 @@ class BarangayEvent(db.Model):
     created_by = db.Column(db.Integer, db.ForeignKey('admin.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     admin = db.relationship('Admin', backref='events')
+
+class CertificateRequest(db.Model):
+    """Certificate requests from residents"""
+    id = db.Column(db.Integer, primary_key=True)
+    reference_number = db.Column(db.String(50), unique=True, nullable=False)
+    
+    # Requester information
+    resident_id = db.Column(db.Integer, db.ForeignKey('resident.id'), nullable=True)
+    requester_name = db.Column(db.String(300), nullable=False)
+    requester_address = db.Column(db.Text, nullable=False)
+    contact_number = db.Column(db.String(20), nullable=True)
+    
+    # Certificate details
+    certificate_type = db.Column(db.String(100), nullable=False)
+    purpose = db.Column(db.Text, nullable=False)
+    
+    # Request tracking
+    status = db.Column(db.String(20), default='pending')  # pending, approved, rejected, ready
+    requested_by = db.Column(db.Integer, db.ForeignKey('admin.id'), nullable=False)
+    requested_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    
+    # Admin action tracking
+    reviewed_by = db.Column(db.Integer, db.ForeignKey('admin.id'), nullable=True)
+    reviewed_at = db.Column(db.DateTime, nullable=True)
+    rejection_reason = db.Column(db.Text, nullable=True)
+    
+    # Certificate details when approved
+    certificate_number = db.Column(db.String(50), nullable=True)
+    issued_date = db.Column(db.Date, nullable=True)
+    
+    # Relationships
+    resident = db.relationship('Resident', backref='certificate_requests', foreign_keys=[resident_id])
+    requester = db.relationship('Admin', foreign_keys=[requested_by], backref='certificate_requests_made')
+    reviewer = db.relationship('Admin', foreign_keys=[reviewed_by], backref='certificate_requests_reviewed')
+
+
+class CertificateTemplate(db.Model):
+    """Templates for different certificate types"""
+    id = db.Column(db.Integer, primary_key=True)
+    certificate_type = db.Column(db.String(100), unique=True, nullable=False)
+    template_name = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    
+    # Template content
+    header_text = db.Column(db.Text, nullable=True)
+    body_template = db.Column(db.Text, nullable=False)
+    footer_text = db.Column(db.Text, nullable=True)
+    
+    # Barangay information
+    barangay_name = db.Column(db.String(200), nullable=True)
+    barangay_address = db.Column(db.Text, nullable=True)
+    
+    # Officials
+    captain_name = db.Column(db.String(200), nullable=True)
+    secretary_name = db.Column(db.String(200), nullable=True)
+    
+    is_active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+
+
+class BarangaySettings(db.Model):
+    """Global barangay settings for certificates"""
+    id = db.Column(db.Integer, primary_key=True)
+    
+    # Barangay Information
+    barangay_name = db.Column(db.String(200), nullable=False)
+    municipality = db.Column(db.String(200), nullable=False)
+    province = db.Column(db.String(200), nullable=False)
+    region = db.Column(db.String(100), nullable=False)
+    
+    # Contact Information
+    contact_number = db.Column(db.String(50), nullable=True)
+    email_address = db.Column(db.String(100), nullable=True)
+    
+    # Current Officials
+    captain_name = db.Column(db.String(200), nullable=False)
+    secretary_name = db.Column(db.String(200), nullable=True)
+    treasurer_name = db.Column(db.String(200), nullable=True)
+    
+    # Logo and seal
+    logo_filename = db.Column(db.String(255), nullable=True)
+    seal_filename = db.Column(db.String(255), nullable=True)
+    
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)

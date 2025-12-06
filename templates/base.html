@@ -119,6 +119,28 @@
                 </li>
                 {% endif %}
             </ul>
+
+            <li class="border-b border-white/10">
+                <a 
+                    href="{{ url_for('certificates.list_certificates') }}" 
+                    class="flex items-center gap-3 px-5 py-4 text-white font-medium transition-all hover:bg-white/10 hover:pl-6">
+                    <span class="text-xl">📄</span>
+                    <span>Certificates</span>
+                </a>
+            </li>
+
+            <!-- For admin only -->
+            {% if current_user.role == 'admin' %}
+            <li class="border-b border-white/10">
+                <a 
+                    href="{{ url_for('certificates.admin_certificates') }}" 
+                    class="flex items-center gap-3 px-5 py-4 text-white font-medium transition-all hover:bg-white/10 hover:pl-6">
+                    <span class="text-xl">✅</span>
+                    <span>Certificate Requests</span>
+                </a>
+            </li>
+            {% endif %}
+            
             
             <!-- Logout -->
             <div class="absolute bottom-6 left-0 right-0 px-5">

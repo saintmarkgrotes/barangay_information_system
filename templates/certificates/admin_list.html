@@ -1,0 +1,299 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <title>Manage Certificates - Admin Panel</title>
+{% endblock %}
+
+{% block content %}
+    <main class="w-full min-h-screen px-4 py-20 sm:px-6 lg:px-8 lg:py-10">
+        <div class="mx-auto max-w-7xl">
+            <!-- Page Header -->
+            <div class="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-blue-600 sm:text-4xl lg:text-5xl">
+                        Certificate Management
+                    </h1>
+                    <p class="mt-2 text-sm text-gray-600 sm:text-base">
+                        Review and process certificate requests
+                    </p>
+                </div>
+                <a 
+                    href="{{ url_for('certificates.barangay_settings') }}"
+                    class="w-full rounded-full bg-gradient-to-r from-gray-600 to-gray-700 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:from-gray-700 hover:to-gray-800 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-gray-300 sm:w-auto">
+                    ⚙️ Settings
+                </a>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="mb-6 grid grid-cols-2 gap-4 sm:mb-8 lg:grid-cols-4">
+                <div class="overflow-hidden rounded-2xl bg-white shadow-md">
+                    <div class="p-5 text-center">
+                        <div class="text-3xl font-bold text-gray-800 sm:text-4xl">{{ stats.total }}</div>
+                        <div class="mt-1 text-xs font-medium uppercase tracking-wider text-gray-600 sm:text-sm">Total Requests</div>
+                    </div>
+                </div>
+
+                <div class="overflow-hidden rounded-2xl bg-white shadow-md">
+                    <div class="p-5 text-center">
+                        <div class="text-3xl font-bold text-yellow-600 sm:text-4xl">{{ stats.pending }}</div>
+                        <div class="mt-1 text-xs font-medium uppercase tracking-wider text-gray-600 sm:text-sm">Pending</div>
+                    </div>
+                </div>
+
+                <div class="overflow-hidden rounded-2xl bg-white shadow-md">
+                    <div class="p-5 text-center">
+                        <div class="text-3xl font-bold text-green-600 sm:text-4xl">{{ stats.approved }}</div>
+                        <div class="mt-1 text-xs font-medium uppercase tracking-wider text-gray-600 sm:text-sm">Approved</div>
+                    </div>
+                </div>
+
+                <div class="overflow-hidden rounded-2xl bg-white shadow-md">
+                    <div class="p-5 text-center">
+                        <div class="text-3xl font-bold text-red-600 sm:text-4xl">{{ stats.rejected }}</div>
+                        <div class="mt-1 text-xs font-medium uppercase tracking-wider text-gray-600 sm:text-sm">Rejected</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="mb-6 overflow-hidden rounded-2xl bg-white shadow-md">
+                <div class="flex overflow-x-auto">
+                    <a href="{{ url_for('certificates.admin_certificates', status='all') }}"
+                       class="flex-1 border-b-4 px-6 py-4 text-center text-sm font-bold transition-colors
+                       {{ 'border-blue-600 bg-blue-50 text-blue-600' if current_filter == 'all' else 'border-transparent text-gray-600 hover:bg-gray-50' }}">
+                        All ({{ stats.total }})
+                    </a>
+                    <a href="{{ url_for('certificates.admin_certificates', status='pending') }}"
+                       class="flex-1 border-b-4 px-6 py-4 text-center text-sm font-bold transition-colors
+                       {{ 'border-yellow-600 bg-yellow-50 text-yellow-600' if current_filter == 'pending' else 'border-transparent text-gray-600 hover:bg-gray-50' }}">
+                        Pending ({{ stats.pending }})
+                    </a>
+                    <a href="{{ url_for('certificates.admin_certificates', status='approved') }}"
+                       class="flex-1 border-b-4 px-6 py-4 text-center text-sm font-bold transition-colors
+                       {{ 'border-green-600 bg-green-50 text-green-600' if current_filter == 'approved' else 'border-transparent text-gray-600 hover:bg-gray-50' }}">
+                        Approved ({{ stats.approved }})
+                    </a>
+                    <a href="{{ url_for('certificates.admin_certificates', status='rejected') }}"
+                       class="flex-1 border-b-4 px-6 py-4 text-center text-sm font-bold transition-colors
+                       {{ 'border-red-600 bg-red-50 text-red-600' if current_filter == 'rejected' else 'border-transparent text-gray-600 hover:bg-gray-50' }}">
+                        Rejected ({{ stats.rejected }})
+                    </a>
+                </div>
+            </div>
+
+            <!-- Requests Table -->
+            <div class="overflow-hidden rounded-2xl bg-white shadow-lg">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-700">
+                                    Reference
+                                </th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-700">
+                                    Requester
+                                </th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-700">
+                                    Certificate Type
+                                </th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-700">
+                                    Date Requested
+                                </th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-700">
+                                    Status
+                                </th>
+                                <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-700">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            {% for cert in requests %}
+                            <tr class="transition-colors hover:bg-gray-50">
+                                <td class="px-6 py-4">
+                                    <div class="text-sm font-mono font-semibold text-gray-900">
+                                        {{ cert.reference_number }}
+                                    </div>
+                                    {% if cert.certificate_number %}
+                                    <div class="text-xs font-mono text-gray-500">
+                                        {{ cert.certificate_number }}
+                                    </div>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm font-semibold text-gray-900">
+                                        {{ cert.requester_name }}
+                                    </div>
+                                    <div class="text-xs text-gray-500">
+                                        by {{ cert.requester.username }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ cert.certificate_type }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-gray-900">
+                                        {{ cert.requested_at.strftime('%b %d, %Y') }}
+                                    </div>
+                                    <div class="text-xs text-gray-500">
+                                        {{ cert.requested_at.strftime('%I:%M %p') }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-flex rounded-full px-3 py-1 text-xs font-bold uppercase
+                                        {% if cert.status == 'pending' %}bg-yellow-100 text-yellow-800
+                                        {% elif cert.status == 'approved' %}bg-green-100 text-green-800
+                                        {% elif cert.status == 'rejected' %}bg-red-100 text-red-800
+                                        {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                        {{ cert.status }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex gap-2">
+                                        <a 
+                                            href="{{ url_for('certificates.view_certificate', id=cert.id) }}"
+                                            class="rounded-lg bg-blue-100 px-3 py-1.5 text-xs font-bold text-blue-700 transition-colors hover:bg-blue-200">
+                                            View
+                                        </a>
+                                        
+                                        {% if cert.status == 'pending' %}
+                                        <button 
+                                            onclick="openApproveModal({{ cert.id }})"
+                                            class="rounded-lg bg-green-100 px-3 py-1.5 text-xs font-bold text-green-700 transition-colors hover:bg-green-200">
+                                            Approve
+                                        </button>
+                                        <button 
+                                            onclick="openRejectModal({{ cert.id }})"
+                                            class="rounded-lg bg-red-100 px-3 py-1.5 text-xs font-bold text-red-700 transition-colors hover:bg-red-200">
+                                            Reject
+                                        </button>
+                                        {% elif cert.status == 'approved' %}
+                                        <a 
+                                            href="{{ url_for('certificates.print_certificate', id=cert.id) }}"
+                                            target="_blank"
+                                            class="rounded-lg bg-purple-100 px-3 py-1.5 text-xs font-bold text-purple-700 transition-colors hover:bg-purple-200">
+                                            Print
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="6" class="px-6 py-12 text-center">
+                                    <div class="text-6xl opacity-30">📄</div>
+                                    <p class="mt-2 text-lg font-semibold text-gray-800">No certificate requests found</p>
+                                    <p class="text-sm text-gray-600">
+                                        {% if current_filter != 'all' %}
+                                        Try viewing all requests or a different status
+                                        {% else %}
+                                        Requests will appear here once users submit them
+                                        {% endif %}
+                                    </p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Approve Modal -->
+    <div id="approveModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/50 backdrop-blur-sm">
+        <div class="flex min-h-full items-center justify-center p-4">
+            <div class="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-800">Approve Certificate</h3>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Are you sure you want to approve this certificate request? A certificate number will be generated automatically.
+                    </p>
+                    <form id="approveForm" method="POST" class="mt-6 flex gap-3">
+                        <button 
+                            type="button"
+                            onclick="closeApproveModal()"
+                            class="flex-1 rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-bold text-gray-700 transition-all hover:bg-gray-50">
+                            Cancel
+                        </button>
+                        <button 
+                            type="submit"
+                            class="flex-1 rounded-full bg-gradient-to-r from-green-600 to-green-700 px-4 py-2 text-sm font-bold text-white shadow-lg transition-all hover:from-green-700 hover:to-green-800">
+                            Approve
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reject Modal -->
+    <div id="rejectModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/50 backdrop-blur-sm">
+        <div class="flex min-h-full items-center justify-center p-4">
+            <div class="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-800">Reject Certificate</h3>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Please provide a reason for rejecting this certificate request.
+                    </p>
+                    <form id="rejectForm" method="POST" class="mt-4">
+                        <textarea 
+                            name="rejection_reason"
+                            rows="3"
+                            required
+                            placeholder="Enter reason for rejection..."
+                            class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm text-gray-900 transition-all focus:border-red-500 focus:outline-none focus:ring-4 focus:ring-red-100"></textarea>
+                        
+                        <div class="mt-4 flex gap-3">
+                            <button 
+                                type="button"
+                                onclick="closeRejectModal()"
+                                class="flex-1 rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-bold text-gray-700 transition-all hover:bg-gray-50">
+                                Cancel
+                            </button>
+                            <button 
+                                type="submit"
+                                class="flex-1 rounded-full bg-gradient-to-r from-red-600 to-red-700 px-4 py-2 text-sm font-bold text-white shadow-lg transition-all hover:from-red-700 hover:to-red-800">
+                                Reject
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openApproveModal(id) {
+            document.getElementById('approveForm').action = `/certificates/${id}/approve`;
+            document.getElementById('approveModal').classList.remove('hidden');
+            document.getElementById('approveModal').classList.add('flex');
+        }
+
+        function closeApproveModal() {
+            document.getElementById('approveModal').classList.add('hidden');
+            document.getElementById('approveModal').classList.remove('flex');
+        }
+
+        function openRejectModal(id) {
+            document.getElementById('rejectForm').action = `/certificates/${id}/reject`;
+            document.getElementById('rejectModal').classList.remove('hidden');
+            document.getElementById('rejectModal').classList.add('flex');
+        }
+
+        function closeRejectModal() {
+            document.getElementById('rejectModal').classList.add('hidden');
+            document.getElementById('rejectModal').classList.remove('flex');
+        }
+
+        // Close modals on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeApproveModal();
+                closeRejectModal();
+            }
+        });
+    </script>
+{% endblock %}
