@@ -3,191 +3,7 @@
 {% block head %}
     <title>Elected Officials - Barangay Information System</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/elected_officials.css') }}">
-    <style>
-
-        /* Modal Styles */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            backdrop-filter: blur(4px);
-        }
-
-        .modal-overlay.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.2s ease;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            width: 90%;
-            max-width: 600px;
-            max-height: 90vh;
-            overflow-y: auto;
-            animation: slideUp 0.3s ease;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 24px 28px;
-            border-bottom: 2px solid #e6eefb;
-        }
-
-        .modal-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #0072ff;
-            margin: 0;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 32px;
-            color: #6b7280;
-            cursor: pointer;
-            padding: 0;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            transition: background 0.2s;
-        }
-
-        .modal-close:hover {
-            background: #f3f4f6;
-        }
-
-        .modal-body {
-            padding: 28px;
-        }
-
-        .modal-form {
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group label {
-            font-weight: 600;
-            color: #24324a;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .form-group input,
-        .form-group select {
-            padding: 12px 14px;
-            border: 1px solid #e6eefb;
-            border-radius: 10px;
-            font-size: 15px;
-            background: #fff;
-            transition: all 0.18s ease;
-            box-sizing: border-box;
-            color: #132033;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            border-color: #0072ff;
-            box-shadow: 0 0 0 3px rgba(0, 114, 255, 0.1);
-            outline: none;
-        }
-
-        .form-help {
-            color: #6b7280;
-            font-size: 13px;
-            margin-top: 4px;
-        }
-
-        .current-photo {
-            margin-top: 12px;
-        }
-
-        .current-photo img {
-            width: 100px;
-            height: 100px;
-            border-radius: 12px;
-            object-fit: cover;
-            border: 3px solid #0c55d6;
-        }
-
-        .modal-footer {
-            padding: 20px 28px;
-            border-top: 2px solid #e6eefb;
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-        }
-
-        .btn-modal-primary {
-            background: linear-gradient(135deg, #0072ff, #00c6ff);
-            color: white;
-            padding: 12px 32px;
-            border: none;
-            border-radius: 25px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 4px 12px rgba(0, 114, 255, 0.3);
-        }
-
-        .btn-modal-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0, 114, 255, 0.4);
-        }
-
-        .btn-modal-secondary {
-            background: #f3f5f8;
-            color: #1f2937;
-            padding: 12px 32px;
-            border: 1px solid #e8eef6;
-            border-radius: 25px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-modal-secondary:hover {
-            background: #e8eef6;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
 {% endblock %}
 
 {% block body %}
@@ -202,37 +18,44 @@
 
         <!-- Chairman Section -->
         <div class="chairman-section">
-            <h2 style="font-size: 18px; font-weight: 600; color: #0b2238; margin-bottom: 16px;">Barangay Chairman</h2>
-            
+            <h2 class="section-subtitle">Barangay Chairman</h2>
             {% if chairman %}
                 <div class="chairman-row">
-                    <img class="official-photo" src="{{ url_for('static', filename='uploads/elected_officials/' ~ (chairman.photo_filename or 'default.png')) }}" alt="{{ chairman.name }}" onerror="this.src='{{ url_for('static', filename='images/default-avatar.png') }}'">
+                    <img class="official-photo" 
+                         src="{{ url_for('static', filename='uploads/elected_officials/' ~ (chairman.photo_filename or 'default.png')) }}" 
+                         alt="{{ chairman.name }}"
+                         onerror="this.src='{{ url_for('static', filename='images/default-avatar.png') }}'">
                     <div class="chairman-info">
                         <div class="chairman-name">{{ chairman.name }}</div>
                         <div class="chairman-title">Punong Barangay</div>
                     </div>
                     {% if current_user.is_authenticated and current_user.role == 'admin' %}
                         <div class="action-buttons">
-                            <button class="btn-link" onclick="openEditModal({{ chairman.id }}, '{{ chairman.name|replace("'", "\\'") }}', '{{ chairman.position }}', {{ chairman.order or 'null' }}, '{{ chairman.photo_filename or '' }}')">Edit</button>
-                            <form method="post" action="{{ url_for('officials.delete_official', id=chairman.id) }}" style="display:inline" onsubmit="return confirm('Delete chairman?')">
+                            <button class="btn-link" onclick="openEditModal({{ chairman.id }}, '{{ chairman.name|replace("'", "\\'") }}', '{{ chairman.position }}', null, '{{ chairman.photo_filename or '' }}')">Edit</button>
+                            <form method="post" 
+                                  action="{{ url_for('officials.delete_official', id=chairman.id) }}" 
+                                  style="display:inline" 
+                                  onsubmit="return confirm('Delete chairman?')">
                                 <button type="submit" class="btn-link delete">Delete</button>
                             </form>
                         </div>
                     {% endif %}
                 </div>
             {% else %}
-                <p style="color: #6b7280; margin-top: 12px;">No Chairman set.</p>
+                <p class="empty-message">No Chairman set.</p>
             {% endif %}
         </div>
 
         <!-- Kagawad Section -->
-        <h2 style="font-size: 18px; font-weight: 600; color: #0b2238; margin-bottom: 16px;">Barangay Kagawad</h2>
-        
+        <h2 class="section-subtitle">Barangay Kagawad</h2>
         <div class="kagawad-grid">
             {% for k in kagawads %}
                 <div class="kagawad-card">
                     <div class="kagawad-number">{{ k.order or loop.index }}</div>
-                    <img class="official-photo" src="{{ url_for('static', filename='uploads/elected_officials/' ~ (k.photo_filename or 'default.png')) }}" alt="{{ k.name }}" style="width: 60px; height: 60px;" onerror="this.src='{{ url_for('static', filename='images/default-avatar.png') }}'">
+                    <img class="official-photo small" 
+                         src="{{ url_for('static', filename='uploads/elected_officials/' ~ (k.photo_filename or 'default.png')) }}" 
+                         alt="{{ k.name }}"
+                         onerror="this.src='{{ url_for('static', filename='images/default-avatar.png') }}'">
                     <div class="kagawad-info">
                         <div class="kagawad-name">{{ k.name }}</div>
                         <div class="kagawad-subtitle">Kagawad</div>
@@ -240,7 +63,10 @@
                     {% if current_user.is_authenticated and current_user.role == 'admin' %}
                         <div class="action-buttons">
                             <button class="btn-link" onclick="openEditModal({{ k.id }}, '{{ k.name|replace("'", "\\'") }}', '{{ k.position }}', {{ k.order or 'null' }}, '{{ k.photo_filename or '' }}')">Edit</button>
-                            <form method="post" action="{{ url_for('officials.delete_official', id=k.id) }}" style="display:inline" onsubmit="return confirm('Delete kagawad?')">
+                            <form method="post" 
+                                  action="{{ url_for('officials.delete_official', id=k.id) }}" 
+                                  style="display:inline" 
+                                  onsubmit="return confirm('Delete kagawad?')">
                                 <button type="submit" class="btn-link delete">Delete</button>
                             </form>
                         </div>
@@ -253,7 +79,7 @@
                 <div class="kagawad-card vacant">
                     <div class="kagawad-number">{{ i }}</div>
                     <div class="kagawad-info">
-                        <div class="kagawad-name" style="color: #9ca3af;">Vacant Position</div>
+                        <div class="kagawad-name">Vacant Position</div>
                         <div class="kagawad-subtitle">Kagawad Slot {{ i }}</div>
                     </div>
                     {% if current_user.is_authenticated and current_user.role == 'admin' %}
@@ -264,146 +90,9 @@
         </div>
     </div>
 
-    <!-- Add Official Modal -->
-    <div id="addOfficialModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Add Elected Official</h2>
-                <button type="button" class="modal-close" onclick="closeAddModal()">&times;</button>
-            </div>
-            <form method="POST" action="{{ url_for('add_elected_official') }}" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <div class="modal-form">
-                        <div class="form-group">
-                            <label for="name">Full Name *</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
+    {% include 'partials/official_add_modal.html' %}
+    {% include 'partials/official_edit_modal.html' %}
 
-                        <div class="form-group">
-                            <label for="position">Position *</label>
-                            <select id="position" name="position" required>
-                                <option value="">— select —</option>
-                                <option value="Chairman">Chairman</option>
-                                <option value="Kagawad">Kagawad</option>
-                            </select>
-                            <small class="form-help">Only one Chairman allowed. Up to 7 Kagawad allowed.</small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="order">Kagawad Order (1-7)</label>
-                            <input type="number" id="order" name="order" min="1" max="7">
-                            <small class="form-help">Leave empty to auto-assign</small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="photo">Photo (jpg, png)</label>
-                            <input type="file" id="photo" name="photo" accept="image/*">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-modal-secondary" onclick="closeAddModal()">Cancel</button>
-                    <button type="submit" class="btn-modal-primary">Add Official</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Edit Official Modal -->
-    <div id="editOfficialModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Edit Elected Official</h2>
-                <button type="button" class="modal-close" onclick="closeEditModal()">&times;</button>
-            </div>
-            <form method="POST" id="editOfficialForm" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <div class="modal-form">
-                        <div class="form-group">
-                            <label for="edit_name">Full Name *</label>
-                            <input type="text" id="edit_name" name="name" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="edit_position">Position *</label>
-                            <select id="edit_position" name="position" required>
-                                <option value="Chairman">Chairman</option>
-                                <option value="Kagawad">Kagawad</option>
-                            </select>
-                            <small class="form-help">Only one Chairman allowed. Up to 7 Kagawad allowed.</small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="edit_order">Kagawad Order (1-7)</label>
-                            <input type="number" id="edit_order" name="order" min="1" max="7">
-                            <small class="form-help">Leave empty to auto-assign</small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="edit_photo">Photo (jpg, png)</label>
-                            <input type="file" id="edit_photo" name="photo" accept="image/*">
-                            <small class="form-help">Leave blank to keep current photo</small>
-                            <div id="currentPhotoPreview" class="current-photo"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-modal-secondary" onclick="closeEditModal()">Cancel</button>
-                    <button type="submit" class="btn-modal-primary">Save Changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        function openAddModal() {
-            document.getElementById('addOfficialModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeAddModal() {
-            document.getElementById('addOfficialModal').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        function openEditModal(id, name, position, order, photoFilename) {
-            document.getElementById('edit_name').value = name;
-            document.getElementById('edit_position').value = position;
-            document.getElementById('edit_order').value = order || '';
-            
-            // Show current photo
-            const photoPreview = document.getElementById('currentPhotoPreview');
-            if (photoFilename) {
-                photoPreview.innerHTML = '<img src="{{ url_for("static", filename="uploads/elected_officials/") }}' + photoFilename + '" alt="Current photo" onerror="this.style.display=\'none\'">';
-            } else {
-                photoPreview.innerHTML = '';
-            }
-            
-            document.getElementById('editOfficialForm').action = '/elected_officials/edit/' + id;
-            document.getElementById('editOfficialModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeEditModal() {
-            document.getElementById('editOfficialModal').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        // Close modals when clicking outside
-        document.getElementById('addOfficialModal').addEventListener('click', function(e) {
-            if (e.target === this) closeAddModal();
-        });
-
-        document.getElementById('editOfficialModal').addEventListener('click', function(e) {
-            if (e.target === this) closeEditModal();
-        });
-
-        // Close modals with Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeAddModal();
-                closeEditModal();
-            }
-        });
-    </script>
+    <script src="{{ url_for('static', filename='js/modal.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/officials.js') }}"></script>
 {% endblock %}

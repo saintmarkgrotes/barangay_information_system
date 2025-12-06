@@ -3,33 +3,32 @@
 {% block head %}
     <title>Household List - Barangay Information System</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/household_list.css') }}">
+{% endblock %}
 
+{% block content %}
     <div class="household-page">
-        <!-- Header Section -->
         <div class="page-header">
             <h1 class="page-title">Household List</h1>
         </div>
 
-        <!-- Zone/Purok Filter Bar -->
         <div class="zone-header">
             <h2 class="zone-title">Zone/Purok</h2>
-            <select class="zone-select">
+            <select class="zone-select" id="purokFilter" onchange="filterHouseholds()">
                 <option value="">Select Purok</option>
                 <option value="all">All Puroks</option>
-                <!-- Add more purok options dynamically if needed -->
             </select>
         </div>
         
-        <!-- Household Grid -->
         {% if households %}
-            <div class="household-grid">
+            <div class="household-grid" id="householdGrid">
                 {% for h in households %}
-                    <div class="household-card">
+                    <div class="household-card" data-purok="{{ h.purok or '' }}">
                         <div class="household-info">
                             <div class="household-label">Household No.</div>
                             <div class="household-number">{{ h.household_no }}</div>
                         </div>
-                        <a href="{{ url_for('households.household_detail', id=h.id) }}" class="btn-see-more">
+                        <a href="{{ url_for('households.household_detail', id=h.id) }}" 
+                           class="btn-see-more">
                             See More
                         </a>
                     </div>
@@ -43,4 +42,20 @@
             </div>
         {% endif %}
     </div>
+
+    <script>
+        function filterHouseholds() {
+            const filter = document.getElementById('purokFilter').value.toLowerCase();
+            const cards = document.querySelectorAll('.household-card');
+            
+            cards.forEach(card => {
+                const purok = card.getAttribute('data-purok').toLowerCase();
+                if (filter === 'all' || filter === '' || purok.includes(filter)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
 {% endblock %}

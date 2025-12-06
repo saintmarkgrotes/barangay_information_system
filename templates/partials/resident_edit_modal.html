@@ -1,0 +1,94 @@
+<div id="addResidentModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Add New Resident</h2>
+            <button type="button" class="modal-close" onclick="closeAddModal()">&times;</button>
+        </div>
+        <form method="POST" action="{{ url_for('residents.add_resident') }}" id="addResidentForm">
+            <div class="modal-body">
+                <div class="modal-form">
+                    <div class="form-group">
+                        <label for="last_name">Last Name *</label>
+                        <input type="text" id="last_name" name="last_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="first_name">First Name *</label>
+                        <input type="text" id="first_name" name="first_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="middle_name">Middle Name</label>
+                        <input type="text" id="middle_name" name="middle_name">
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender *</label>
+                        <select id="gender" name="gender" required>
+                            <option value="">Select gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="date_of_birth">Date of Birth</label>
+                        <input type="date" id="date_of_birth" name="date_of_birth">
+                    </div>
+                    <div class="form-group">
+                        <label for="purok">Purok *</label>
+                        <input type="text" id="purok" name="purok" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="age">Age *</label>
+                        <input type="number" min="0" id="age" name="age" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="place_of_birth">Place of Birth</label>
+                        <input type="text" id="place_of_birth" name="place_of_birth">
+                    </div>
+                    <div class="form-group">
+                        <label for="civil_status">Civil Status</label>
+                        <input type="text" id="civil_status" name="civil_status">
+                    </div>
+                    <div class="form-group">
+                        <label for="citizenship">Citizenship</label>
+                        <input type="text" id="citizenship" name="citizenship">
+                    </div>
+                    <div class="form-group">
+                        <label for="occupation">Occupation</label>
+                        <input type="text" id="occupation" name="occupation">
+                    </div>
+                    <div class="form-group">
+                        <label for="voter_status">Voter Status *</label>
+                        <select id="voter_status" name="voter_status" required>
+                            <option value="">Select status</option>
+                            <option value="Voter">Voter</option>
+                            <option value="Non-Voter">Non-Voter</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="senior_citizen">Senior Citizen *</label>
+                        <select id="senior_citizen" name="senior_citizen" required>
+                            <option value="">Select status</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group form-group-full">
+                        <label for="household_select">Household</label>
+                        <select id="household_select" name="household_select" onchange="toggleNewHousehold(this.value)">
+                            <option value="none">-- No household --</option>
+                            {% for h in households %}
+                            <option value="{{ h.id }}">{{ h.household_no }} — {{ h.barangay or '' }} {{ h.city_municipality or '' }}</option>
+                            {% endfor %}
+                            <option value="new">+ Add new household</option>
+                        </select>
+                    </div>
+
+                    {% include 'partials/household_fields.html' with context %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modal-secondary" onclick="closeAddModal()">Cancel</button>
+                <button type="submit" class="btn-modal-primary">Add Resident</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,117 @@
+/* Reusable Button Styles */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    transition: all 0.3s ease;
+    min-width: 100px;
+    box-sizing: border-box;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #0072ff 0%, #00c6ff 100%);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 114, 255, 0.3);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0052cc 0%, #0099cc 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 114, 255, 0.4);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+}
+
+.btn-info {
+    background: linear-gradient(135deg, #2196f3 0%, #21cbf3 100%);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.2);
+}
+
+.btn-info:hover {
+    background: linear-gradient(135deg, #1976d2 0%, #00bcd4 100%);
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+    min-width: auto;
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: #0c55d6;
+    cursor: pointer;
+    font-weight: 700;
+    padding: 0;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.btn-link:hover {
+    background: #eff6ff;
+}
+
+.btn-link.delete {
+    color: #ef4444;
+}
+
+.btn-link.delete:hover {
+    background: #fee2e2;
+}
+
+/* Button Groups */
+.btn-group {
+    display: flex;
+    gap: 8px;
+}
+
+/* Add Button */
+.btn-add {
+    background: #0c55d6;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-add:hover {
+    background: #0a47b5;
+}
