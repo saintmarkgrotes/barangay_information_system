@@ -1,14 +1,54 @@
+/* Mobile-First Officials Styles */
+.dashboard-main {
+    padding: 80px 16px 24px;
+}
+
+.section-header {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.dashboard-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #0072ff;
+    margin: 0;
+}
+
+.section-subtitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: #0b2238;
+    margin: 16px 0 12px;
+}
+
+.empty-message {
+    color: #6b7280;
+    margin-top: 12px;
+    font-size: 14px;
+}
+
+/* Official Photo */
 .official-photo {
-    width: 80px;
-    height: 80px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     object-fit: cover;
     border: 3px solid #0c55d6;
+    flex-shrink: 0;
 }
 
+.official-photo.small {
+    width: 56px;
+    height: 56px;
+}
+
+/* Chairman Section - Mobile First */
 .chairman-section {
     background: white;
-    padding: 24px;
+    padding: 20px;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     margin-bottom: 24px;
@@ -16,9 +56,11 @@
 
 .chairman-row {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 16px;
     margin-top: 16px;
+    text-align: center;
 }
 
 .chairman-info {
@@ -27,7 +69,7 @@
 
 .chairman-name {
     font-weight: 700;
-    font-size: 24px;
+    font-size: 20px;
     color: #0b2238;
     margin-bottom: 4px;
 }
@@ -37,22 +79,23 @@
     font-size: 14px;
 }
 
+/* Kagawad Grid - Mobile First */
 .kagawad-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 16px;
+    grid-template-columns: 1fr;
+    gap: 12px;
     margin-top: 16px;
 }
 
 .kagawad-card {
     background: white;
-    padding: 20px;
+    padding: 16px;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     display: flex;
     align-items: center;
-    gap: 16px;
-    transition: transform 0.2s, box-shadow 0.2s;
+    gap: 12px;
+    transition: all 0.2s ease;
 }
 
 .kagawad-card:hover {
@@ -67,13 +110,15 @@
 
 .kagawad-info {
     flex: 1;
+    min-width: 0;
 }
 
 .kagawad-name {
     font-weight: 600;
-    font-size: 16px;
+    font-size: 15px;
     color: #0b2238;
     margin-bottom: 4px;
+    word-wrap: break-word;
 }
 
 .kagawad-subtitle {
@@ -84,65 +129,215 @@
 .kagawad-number {
     background: #0c55d6;
     color: white;
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 600;
     font-size: 14px;
+    flex-shrink: 0;
 }
 
 .vacant .kagawad-number {
     background: #d1d5db;
 }
 
+/* Action Buttons */
 .action-buttons {
     display: flex;
+    flex-direction: column;
     gap: 8px;
-    margin-left: auto;
+    width: 100%;
+    margin-top: 12px;
 }
 
 .btn-link {
     color: #0c55d6;
     text-decoration: none;
     font-size: 14px;
-    padding: 6px 12px;
-    border-radius: 6px;
-    transition: background 0.2s;
+    padding: 10px 16px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    background: #eff6ff;
+    text-align: center;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-link:hover {
-    background: #eff6ff;
+    background: #dbeafe;
 }
 
 .btn-link.delete {
     color: #ef4444;
-}
-
-.btn-link.delete:hover {
     background: #fee2e2;
 }
 
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+.btn-link.delete:hover {
+    background: #fecaca;
 }
 
 .btn-add {
     background: #0c55d6;
     color: white;
-    padding: 10px 20px;
+    padding: 12px 24px;
     border-radius: 8px;
     text-decoration: none;
     font-size: 14px;
     font-weight: 600;
-    transition: background 0.2s;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    text-align: center;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-add:hover {
     background: #0a47b5;
+}
+
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) {
+    .dashboard-main {
+        padding: 32px 24px;
+    }
+    
+    .section-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 28px;
+    }
+    
+    .dashboard-title {
+        font-size: 38px;
+    }
+    
+    .section-subtitle {
+        font-size: 17px;
+        margin: 20px 0 16px;
+    }
+    
+    .official-photo {
+        width: 72px;
+        height: 72px;
+    }
+    
+    .official-photo.small {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .chairman-section {
+        padding: 24px;
+    }
+    
+    .chairman-row {
+        flex-direction: row;
+        text-align: left;
+        gap: 20px;
+    }
+    
+    .chairman-name {
+        font-size: 22px;
+    }
+    
+    .kagawad-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+    
+    .kagawad-card {
+        padding: 18px;
+    }
+    
+    .kagawad-name {
+        font-size: 16px;
+    }
+    
+    .action-buttons {
+        flex-direction: row;
+        width: auto;
+        margin-top: 0;
+        margin-left: auto;
+    }
+    
+    .btn-link {
+        padding: 8px 14px;
+        min-height: auto;
+    }
+    
+    .btn-add {
+        width: auto;
+        min-width: 140px;
+        min-height: auto;
+        padding: 10px 20px;
+    }
+}
+
+/* Desktop (≥ 1024px) */
+@media (min-width: 1024px) {
+    .dashboard-main {
+        padding: 40px 32px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    .dashboard-title {
+        font-size: 50px;
+    }
+    
+    .section-subtitle {
+        font-size: 18px;
+        margin: 24px 0 16px;
+    }
+    
+    .official-photo {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .official-photo.small {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .chairman-section {
+        margin-bottom: 28px;
+    }
+    
+    .chairman-name {
+        font-size: 24px;
+    }
+    
+    .kagawad-grid {
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    }
+    
+    .kagawad-card {
+        padding: 20px;
+        gap: 16px;
+    }
+    
+    .btn-link {
+        padding: 6px 12px;
+    }
+}
+
+/* Large Desktop (≥ 1280px) */
+@media (min-width: 1280px) {
+    .kagawad-grid {
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    }
 }

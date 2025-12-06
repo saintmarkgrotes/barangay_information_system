@@ -8,45 +8,99 @@
 </head>
 <body>
     {% block body %}
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- Overlay for mobile menu -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
     <div class="dashboard-flex-root">   
-        <nav class="sidebar-nav">
+        <nav class="sidebar-nav" id="sidebarNav">
             <div class="sidebar-brand">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
             </div>
             <ul class="sidebar-list">
                 <li class="sidebar-item">
-                    <a class="sidebar-link" href="{{ url_for('main.dashboard') }}">Dashboard</a>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="{{ url_for('residents.list_residents') }}">Resident Section</a>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="{{ url_for('residents.pending_residents') }}">
-                        {% if current_user.role == 'admin' %}
-                            Pending Approvals
-                        {% else %}
-                            My Submissions
-                        {% endif %}
+                    <a class="sidebar-link" href="{{ url_for('main.dashboard') }}">
+                        <span class="link-icon">📊</span>
+                        <span class="link-text">Dashboard</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a class="sidebar-link" href="{{ url_for('officials.list_officials') }}">Elected Officials</a>
+                    <a class="sidebar-link" href="{{ url_for('residents.list_residents') }}">
+                        <span class="link-icon">👥</span>
+                        <span class="link-text">Resident Section</span>
+                    </a>
                 </li>
                 <li class="sidebar-item">
-                    <a class="sidebar-link" href="{{ url_for('households.list_households') }}">Household List</a>
+                    <a class="sidebar-link" href="{{ url_for('residents.pending_residents') }}">
+                        <span class="link-icon">⏳</span>
+                        <span class="link-text">
+                            {% if current_user.role == 'admin' %}
+                                Pending Approvals
+                            {% else %}
+                                My Submissions
+                            {% endif %}
+                        </span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="{{ url_for('officials.list_officials') }}">
+                        <span class="link-icon">👔</span>
+                        <span class="link-text">Elected Officials</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="{{ url_for('households.list_households') }}">
+                        <span class="link-icon">🏠</span>
+                        <span class="link-text">Household List</span>
+                    </a>
                 </li>
                 {% if current_user.role == 'admin' %}
                 <li class="sidebar-item">
-                    <a class="sidebar-link" href="{{ url_for('settings.system_settings') }}">System Settings</a>
+                    <a class="sidebar-link" href="{{ url_for('settings.system_settings') }}">
+                        <span class="link-icon">⚙️</span>
+                        <span class="link-text">System Settings</span>
+                    </a>
                 </li>
                 {% endif %}
             </ul>
             <div class="sidebar-logout">
-                <a class="logout-btn" href="{{ url_for('auth.logout') }}">Logout</a>
+                <a class="logout-btn" href="{{ url_for('auth.logout') }}">
+                    <span class="link-icon">🚪</span>
+                    <span class="link-text">Logout</span>
+                </a>
             </div>
         </nav>
     {% endblock %}
 
     {% block content %}{% endblock %}
+    
+    <script>
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebarNav = document.getElementById('sidebarNav');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+        
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                sidebarNav.classList.toggle('active');
+                mobileOverlay.classList.toggle('active');
+                document.body.classList.toggle('menu-open');
+            });
+            
+            mobileOverlay.addEventListener('click', function() {
+                mobileMenuToggle.classList.remove('active');
+                sidebarNav.classList.remove('active');
+                this.classList.remove('active');
+                document.body.classList.remove('menu-open');
+            });
+        }
+    </script>
 </body>
 </html>

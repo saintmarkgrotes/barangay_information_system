@@ -1,17 +1,22 @@
-/* Reusable Button Styles */
+/* Mobile-First Reusable Button Styles */
 .btn {
-    padding: 10px 20px;
+    padding: 12px 24px;
     border: none;
     border-radius: 25px;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     text-decoration: none;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     transition: all 0.3s ease;
-    min-width: 100px;
     box-sizing: border-box;
+    touch-action: manipulation;
+    min-height: 44px;
+    gap: 8px;
+    white-space: nowrap;
 }
 
 .btn-primary {
@@ -20,10 +25,12 @@
     box-shadow: 0 2px 8px rgba(0, 114, 255, 0.3);
 }
 
-.btn-primary:hover {
+.btn-primary:hover,
+.btn-primary:focus {
     background: linear-gradient(135deg, #0052cc 0%, #0099cc 100%);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 114, 255, 0.4);
+    color: #fff;
 }
 
 .btn-success {
@@ -32,10 +39,12 @@
     box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
 }
 
-.btn-success:hover {
+.btn-success:hover,
+.btn-success:focus {
     background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+    color: #fff;
 }
 
 .btn-danger {
@@ -44,10 +53,12 @@
     box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
 }
 
-.btn-danger:hover {
+.btn-danger:hover,
+.btn-danger:focus {
     background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+    color: #fff;
 }
 
 .btn-info {
@@ -56,31 +67,55 @@
     box-shadow: 0 2px 8px rgba(33, 150, 243, 0.2);
 }
 
-.btn-info:hover {
+.btn-info:hover,
+.btn-info:focus {
     background: linear-gradient(135deg, #1976d2 0%, #00bcd4 100%);
+    color: #fff;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+    background: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4);
 }
 
 .btn-sm {
-    padding: 6px 12px;
-    font-size: 12px;
-    min-width: auto;
+    padding: 8px 16px;
+    font-size: 13px;
+    min-height: 36px;
+    border-radius: 18px;
 }
 
+.btn-lg {
+    padding: 14px 32px;
+    font-size: 16px;
+    min-height: 52px;
+}
+
+/* Button Link Style */
 .btn-link {
     background: none;
     border: none;
     color: #0c55d6;
     cursor: pointer;
     font-weight: 700;
-    padding: 0;
+    padding: 6px 12px;
     text-decoration: none;
     font-size: 14px;
-    padding: 6px 12px;
     border-radius: 6px;
     transition: background 0.2s;
+    min-height: 36px;
 }
 
-.btn-link:hover {
+.btn-link:hover,
+.btn-link:focus {
     background: #eff6ff;
 }
 
@@ -88,13 +123,21 @@
     color: #ef4444;
 }
 
-.btn-link.delete:hover {
+.btn-link.delete:hover,
+.btn-link.delete:focus {
     background: #fee2e2;
 }
 
 /* Button Groups */
 .btn-group {
     display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.btn-group-vertical {
+    display: flex;
+    flex-direction: column;
     gap: 8px;
 }
 
@@ -102,16 +145,139 @@
 .btn-add {
     background: #0c55d6;
     color: white;
-    padding: 10px 20px;
+    padding: 12px 24px;
     border-radius: 8px;
     text-decoration: none;
     font-size: 14px;
     font-weight: 600;
     border: none;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    touch-action: manipulation;
 }
 
-.btn-add:hover {
+.btn-add:hover,
+.btn-add:focus {
     background: #0a47b5;
+    transform: translateY(-2px);
+}
+
+/* Disabled State */
+.btn:disabled,
+.btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* Loading State */
+.btn.loading {
+    position: relative;
+    color: transparent;
+    pointer-events: none;
+}
+
+.btn.loading::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid transparent;
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: spinner 0.6s linear infinite;
+}
+
+@keyframes spinner {
+    to { transform: rotate(360deg); }
+}
+
+/* Full Width Buttons (Mobile) */
+@media (max-width: 767px) {
+    .btn-block-mobile {
+        width: 100%;
+        display: flex;
+    }
+}
+
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) {
+    .btn {
+        padding: 10px 24px;
+        min-height: auto;
+    }
+    
+    .btn-sm {
+        padding: 6px 14px;
+        font-size: 13px;
+        min-height: auto;
+    }
+    
+    .btn-lg {
+        padding: 12px 32px;
+        font-size: 16px;
+        min-height: auto;
+    }
+    
+    .btn-add {
+        padding: 10px 20px;
+        min-height: auto;
+    }
+}
+
+/* Desktop (≥ 1024px) */
+@media (min-width: 1024px) {
+    .btn:hover,
+    .btn:focus {
+        transform: translateY(-2px);
+    }
+}
+
+/* Focus Visible (Keyboard Navigation) */
+.btn:focus-visible {
+    outline: 3px solid rgba(0, 114, 255, 0.5);
+    outline-offset: 2px;
+}
+
+/* Active State */
+.btn:active {
+    transform: translateY(0);
+}
+
+/* Icon Buttons */
+.btn-icon {
+    padding: 12px;
+    min-width: 44px;
+    border-radius: 50%;
+}
+
+.btn-icon-sm {
+    padding: 8px;
+    min-width: 36px;
+}
+
+/* Button with Icon */
+.btn .icon {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.btn-sm .icon {
+    font-size: 16px;
+}
+
+/* Print Hide */
+@media print {
+    .btn {
+        display: none;
+    }
 }

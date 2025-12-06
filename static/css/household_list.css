@@ -1,44 +1,43 @@
-/* Main Container */
+/* Mobile-First Household List Styles */
 .household-page {
-    padding-left: 250px;
+    padding: 80px 16px 24px;
     background: transparent;
-    max-width: 1400px;
+    width: 100%;
 }
 
 .page-header {
-    margin-bottom: 24px;
+    margin-bottom: 20px;
 }
 
 .header-location {
     color: #0b2238;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 400;
     margin-bottom: 6px;
-    text-decoration: underline;
 }
 
 .page-title {
     color: #0c55d6;
-    font-size: 50px;
+    font-size: 28px;
     font-weight: 700;
-    margin-bottom: 30px;
+    margin-bottom: 24px;
 }
 
-/* Zone/Purok Header */
+/* Zone/Purok Header - Mobile First */
 .zone-header {
     background: linear-gradient(135deg, #1876f4, #0c55d6);
-    padding: 16px 40px;
-    border-radius: 50px;
+    padding: 16px 20px;
+    border-radius: 16px;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 28px;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
     box-shadow: 0 6px 20px rgba(12, 85, 214, 0.25);
 }
 
 .zone-title {
     color: white;
-    font-size: 28px;
+    font-size: 20px;
     font-weight: 700;
     margin: 0;
 }
@@ -46,13 +45,14 @@
 .zone-select {
     background: white;
     border: none;
-    padding: 10px 24px;
+    padding: 12px 20px;
     border-radius: 25px;
     font-size: 14px;
-    color: #9ca3af;
-    min-width: 200px;
+    color: #333;
+    width: 100%;
     cursor: pointer;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.2s ease;
 }
 
 .zone-select:focus {
@@ -60,45 +60,47 @@
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
 }
 
-/* Household Grid */
+/* Household Grid - Mobile First */
 .household-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 18px;
+    grid-template-columns: 1fr;
+    gap: 14px;
     margin-top: 16px;
 }
 
 .household-card {
     background: white;
-    padding: 20px 28px;
+    padding: 18px;
     border-radius: 14px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    transition: transform 0.2s, box-shadow 0.2s;
+    flex-direction: column;
+    gap: 14px;
+    transition: all 0.2s ease;
 }
 
 .household-card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
 .household-info {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 4px;
 }
 
 .household-label {
     color: #6b7280;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .household-number {
     color: #0c55d6;
-    font-size: 26px;
+    font-size: 22px;
     font-weight: 700;
     letter-spacing: 0.5px;
 }
@@ -107,16 +109,21 @@
 .btn-see-more {
     background: linear-gradient(135deg, #1876f4, #0c55d6);
     color: white;
-    padding: 10px 32px;
+    padding: 12px 24px;
     border-radius: 25px;
     text-decoration: none;
     font-size: 14px;
     font-weight: 600;
     border: none;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: all 0.2s ease;
     box-shadow: 0 4px 12px rgba(12, 85, 214, 0.3);
-    white-space: nowrap;
+    text-align: center;
+    display: block;
+    width: 100%;
+    touch-action: manipulation;
+    min-height: 44px;
+    line-height: 20px;
 }
 
 .btn-see-more:hover {
@@ -148,76 +155,111 @@
 .empty-subtitle {
     font-size: 14px;
     color: #6b7280;
+    line-height: 1.5;
 }
 
-/* Responsive Design */
-@media (max-width: 1200px) {
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) {
     .household-page {
-        padding: 20px 24px;
-    }
-}
-
-@media (max-width: 1024px) {
-    .household-grid {
-        grid-template-columns: 1fr;
+        padding: 32px 24px;
     }
     
     .page-title {
-        font-size: 28px;
-    }
-    
-    .zone-title {
-        font-size: 24px;
-    }
-}
-
-@media (max-width: 768px) {
-    .household-page {
-        padding: 16px 20px;
+        font-size: 38px;
+        margin-bottom: 28px;
     }
     
     .zone-header {
-        flex-direction: column;
-        gap: 14px;
-        padding: 18px 28px;
-        border-radius: 40px;
-    }
-    
-    .page-title {
-        font-size: 24px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 32px;
+        border-radius: 30px;
     }
     
     .zone-title {
-        font-size: 20px;
+        font-size: 24px;
     }
     
     .zone-select {
-        width: 100%;
+        width: auto;
+        min-width: 220px;
+    }
+    
+    .household-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
     }
     
     .household-card {
-        padding: 18px 24px;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 14px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 24px;
     }
     
     .household-number {
-        font-size: 22px;
+        font-size: 24px;
     }
     
     .btn-see-more {
-        width: 100%;
-        text-align: center;
+        width: auto;
+        min-width: 120px;
+        padding: 10px 28px;
+        min-height: auto;
     }
 }
 
-@media (max-width: 480px) {
+/* Desktop (≥ 1024px) */
+@media (min-width: 1024px) {
+    .household-page {
+        padding: 40px 32px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
     .page-title {
-        font-size: 22px;
+        font-size: 50px;
+        margin-bottom: 30px;
+    }
+    
+    .zone-header {
+        padding: 16px 40px;
+        border-radius: 50px;
+        margin-bottom: 28px;
+    }
+    
+    .zone-title {
+        font-size: 28px;
+    }
+    
+    .zone-select {
+        min-width: 200px;
+    }
+    
+    .household-card {
+        padding: 20px 28px;
     }
     
     .household-number {
-        font-size: 20px;
+        font-size: 26px;
+    }
+    
+    .btn-see-more {
+        padding: 10px 32px;
+    }
+}
+
+/* Large Desktop (≥ 1280px) */
+@media (min-width: 1280px) {
+    .household-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Extra Large Desktop (≥ 1536px) */
+@media (min-width: 1536px) {
+    .household-grid {
+        grid-template-columns: repeat(4, 1fr);
     }
 }

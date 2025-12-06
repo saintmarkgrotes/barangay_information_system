@@ -1,33 +1,33 @@
-/* Residents Page Styles */
+/* Mobile-First Residents Page Styles */
 .residents-container {
     min-height: 100vh;
-    padding-left: 250px;
+    padding: 80px 16px 24px;
+    width: 100%;
 }
 
 .residents-title {
-    font-size: 50px;
+    font-size: 28px;
     font-weight: 600;
     color: #0072ff;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
-/* Search Form */
+/* Search Form - Mobile First */
 .residents-search-form {
     display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 30px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
 }
 
 .search-input {
-    flex: 1;
+    width: 100%;
     padding: 12px 16px;
     border: 2px solid #e9ecef;
     border-radius: 50px;
     font-size: 16px;
     background: #f8f9fa;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s ease;
     box-sizing: border-box;
 }
 
@@ -42,7 +42,81 @@
     color: #6c757d;
 }
 
-/* Residents List */
+/* Button Styles */
+.btn-primary,
+.btn-success,
+.btn-danger,
+.btn-info {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    white-space: nowrap;
+    touch-action: manipulation;
+    min-height: 44px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #0072ff 0%, #00c6ff 100%);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 114, 255, 0.3);
+    width: 100%;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0052cc 0%, #0099cc 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 114, 255, 0.4);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+}
+
+.btn-info {
+    background: linear-gradient(135deg, #2196f3 0%, #21cbf3 100%);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.2);
+}
+
+.btn-info:hover {
+    background: linear-gradient(135deg, #1976d2 0%, #00bcd4 100%);
+}
+
+.btn-sm {
+    padding: 8px 16px;
+    font-size: 13px;
+    min-height: 36px;
+}
+
+/* Residents List - Mobile First */
 .residents-list {
     list-style: none;
     padding: 0;
@@ -51,72 +125,243 @@
 
 .resident-card {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    gap: 12px;
     background: #fff;
-    border-radius: 20px;
+    border-radius: 16px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    margin-bottom: 18px;
-    padding: 16px 32px;
-    gap: 18px;
-    font-size: 20px;
-    font-weight: 500;
+    margin-bottom: 12px;
+    padding: 16px;
+    transition: all 0.2s ease;
+}
+
+.resident-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 .resident-name {
     color: #222;
-    font-size: 20px;
-    font-weight: 500;
+    font-size: 16px;
+    font-weight: 600;
     letter-spacing: 0.01em;
+    word-break: break-word;
 }
 
 .resident-actions {
-    margin-left: auto;
     display: flex;
-    gap: 10px;
-    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+}
+
+.resident-actions .btn-sm {
+    flex: 1;
+    min-width: 80px;
 }
 
 .text-center {
     justify-content: center;
+    align-items: center;
     color: #888;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 400;
     background: none;
     box-shadow: none;
-    padding: 30px 0;
+    padding: 40px 20px;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) {
     .residents-container {
-        padding-left: 20px;
-        padding-right: 20px;
+        padding: 32px 24px;
     }
-
+    
+    .residents-title {
+        font-size: 38px;
+        margin-bottom: 24px;
+    }
+    
+    .residents-search-form {
+        flex-direction: row;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 28px;
+    }
+    
+    .search-input {
+        flex: 1;
+    }
+    
+    .btn-primary {
+        width: auto;
+        min-width: 160px;
+    }
+    
     .resident-card {
-        padding: 12px 20px;
-        font-size: 16px;
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row;
+        align-items: center;
+        padding: 18px 28px;
+        margin-bottom: 16px;
     }
-
+    
+    .resident-name {
+        font-size: 18px;
+        flex: 1;
+    }
+    
     .resident-actions {
-        margin-left: 0;
-        width: 100%;
-        justify-content: flex-start;
+        width: auto;
+        margin-left: auto;
+    }
+    
+    .resident-actions .btn-sm {
+        flex: 0;
+        min-width: 70px;
     }
 }
 
-@media (max-width: 600px) {
+/* Desktop (≥ 1024px) */
+@media (min-width: 1024px) {
+    .residents-container {
+        padding: 40px 32px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
     .residents-title {
-        font-size: 32px;
+        font-size: 50px;
+        margin-bottom: 30px;
     }
-
+    
     .resident-card {
-        padding: 12px 10px;
+        padding: 16px 32px;
+        margin-bottom: 18px;
     }
-
+    
     .resident-name {
-        font-size: 16px;
+        font-size: 20px;
+    }
+    
+    .resident-actions {
+        gap: 10px;
+    }
+}
+
+/* Responsive table for small screens */
+@media (max-width: 767px) {
+    table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 0 -16px;
+        padding: 0 16px;
+    }
+}
+
+/* Status badges for pending residents */
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-pending {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.status-approved {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.status-rejected {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+/* Pending Details */
+.pending-details {
+    font-size: 13px;
+    color: #6b7280;
+    margin-top: 8px;
+    line-height: 1.5;
+}
+
+.pending-info {
+    background: #f9fafb;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 12px;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.pending-info strong {
+    color: #374151;
+}
+
+/* Review Actions */
+.review-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+    margin-top: 12px;
+}
+
+.btn-approve,
+.btn-reject {
+    flex: 1;
+    min-width: 120px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    min-height: 44px;
+}
+
+.btn-approve {
+    background-color: #10b981;
+    color: white;
+}
+
+.btn-approve:hover {
+    background-color: #059669;
+}
+
+.btn-reject {
+    background-color: #ef4444;
+    color: white;
+}
+
+.btn-reject:hover {
+    background-color: #dc2626;
+}
+
+@media (min-width: 768px) {
+    .review-actions {
+        width: auto;
+        margin-top: 0;
+    }
+    
+    .btn-approve,
+    .btn-reject {
+        flex: 0;
+        min-width: 100px;
+        padding: 8px 16px;
+        min-height: 36px;
     }
 }
