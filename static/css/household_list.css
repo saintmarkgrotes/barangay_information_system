@@ -1,0 +1,223 @@
+/* Main Container */
+.household-page {
+    padding-left: 250px;
+    background: transparent;
+    max-width: 1400px;
+}
+
+.page-header {
+    margin-bottom: 24px;
+}
+
+.header-location {
+    color: #0b2238;
+    font-size: 14px;
+    font-weight: 400;
+    margin-bottom: 6px;
+    text-decoration: underline;
+}
+
+.page-title {
+    color: #0c55d6;
+    font-size: 50px;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+/* Zone/Purok Header */
+.zone-header {
+    background: linear-gradient(135deg, #1876f4, #0c55d6);
+    padding: 16px 40px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    box-shadow: 0 6px 20px rgba(12, 85, 214, 0.25);
+}
+
+.zone-title {
+    color: white;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.zone-select {
+    background: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 25px;
+    font-size: 14px;
+    color: #9ca3af;
+    min-width: 200px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.zone-select:focus {
+    outline: none;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* Household Grid */
+.household-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    margin-top: 16px;
+}
+
+.household-card {
+    background: white;
+    padding: 20px 28px;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.household-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.household-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.household-label {
+    color: #6b7280;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.household-number {
+    color: #0c55d6;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* See More Button */
+.btn-see-more {
+    background: linear-gradient(135deg, #1876f4, #0c55d6);
+    color: white;
+    padding: 10px 32px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 12px rgba(12, 85, 214, 0.3);
+    white-space: nowrap;
+}
+
+.btn-see-more:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(12, 85, 214, 0.4);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6b7280;
+    grid-column: 1 / -1;
+}
+
+.empty-state-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.3;
+}
+
+.empty-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #374151;
+}
+
+.empty-subtitle {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .household-page {
+        padding: 20px 24px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .household-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .page-title {
+        font-size: 28px;
+    }
+    
+    .zone-title {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .household-page {
+        padding: 16px 20px;
+    }
+    
+    .zone-header {
+        flex-direction: column;
+        gap: 14px;
+        padding: 18px 28px;
+        border-radius: 40px;
+    }
+    
+    .page-title {
+        font-size: 24px;
+    }
+    
+    .zone-title {
+        font-size: 20px;
+    }
+    
+    .zone-select {
+        width: 100%;
+    }
+    
+    .household-card {
+        padding: 18px 24px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+    }
+    
+    .household-number {
+        font-size: 22px;
+    }
+    
+    .btn-see-more {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 22px;
+    }
+    
+    .household-number {
+        font-size: 20px;
+    }
+}
