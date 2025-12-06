@@ -2,64 +2,279 @@
 
 {% block head %}
     <title>Dashboard - Barangay Information System</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Dashboard-specific responsive styles */
+        @media (max-width: 639px) {
+            .stat-card {
+                min-height: 120px;
+            }
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
-    <div class="dashboard-main">
-        <h1 class="dashboard-title">Dashboard</h1>
-        
-        <div class="dashboard-stats-grid">
-            <div class="dashboard-stats-row">
-                <div class="stat-card card">
-                    <div class="card-body">
-                        <h5 class="card-title">Total Population</h5>
-                        <p class="card-text">{{ total_population }}</p>
+    <div class="w-full min-h-screen px-4 py-20 sm:px-6 lg:px-8 lg:py-10">
+        <div class="mx-auto max-w-7xl">
+            <!-- Page Title -->
+            <h1 class="mb-6 text-3xl font-bold text-blue-600 sm:mb-8 sm:text-4xl lg:text-5xl">
+                Dashboard
+            </h1>
+            
+            <!-- Stats Grid - Responsive -->
+            <div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <!-- Total Population -->
+                <div class="stat-card transform overflow-hidden rounded-2xl bg-white shadow-lg transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl">
+                    <div class="p-6 text-center">
+                        <h5 class="mb-2 text-xs font-medium uppercase tracking-wider text-gray-600 sm:text-sm">
+                            Total Population
+                        </h5>
+                        <p class="text-3xl font-bold text-blue-600 sm:text-4xl lg:text-5xl">
+                            {{ total_population }}
+                        </p>
                     </div>
                 </div>
-                <div class="stat-card card">
-                    <div class="card-body">
-                        <h5 class="card-title">Total Males</h5>
-                        <p class="card-text">{{ total_males }}</p>
+
+                <!-- Total Males -->
+                <div class="stat-card transform overflow-hidden rounded-2xl bg-white shadow-lg transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl">
+                    <div class="p-6 text-center">
+                        <h5 class="mb-2 text-xs font-medium uppercase tracking-wider text-gray-600 sm:text-sm">
+                            Total Males
+                        </h5>
+                        <p class="text-3xl font-bold text-blue-600 sm:text-4xl lg:text-5xl">
+                            {{ total_males }}
+                        </p>
                     </div>
                 </div>
-                <div class="stat-card card">
-                    <div class="card-body">
-                        <h5 class="card-title">Total Females</h5>
-                        <p class="card-text">{{ total_females }}</p>
+
+                <!-- Total Females -->
+                <div class="stat-card transform overflow-hidden rounded-2xl bg-white shadow-lg transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl">
+                    <div class="p-6 text-center">
+                        <h5 class="mb-2 text-xs font-medium uppercase tracking-wider text-gray-600 sm:text-sm">
+                            Total Females
+                        </h5>
+                        <p class="text-3xl font-bold text-blue-600 sm:text-4xl lg:text-5xl">
+                            {{ total_females }}
+                        </p>
                     </div>
                 </div>
             </div>
 
-            <div id="more-stats" class="dashboard-more-stats">
-                <div class="dashboard-stats-row">
-                    <div class="stat-card card">
-                        <div class="card-body">
-                            <h5 class="card-title">Senior Citizens</h5>
-                            <p class="card-text">{{ total_senior_citizens }}</p>
-                        </div>
+            <!-- More Stats (Hidden by default) -->
+            <div id="more-stats" class="mb-6 hidden grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <!-- Senior Citizens -->
+                <div class="stat-card transform overflow-hidden rounded-2xl bg-white shadow-lg transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl">
+                    <div class="p-6 text-center">
+                        <h5 class="mb-2 text-xs font-medium uppercase tracking-wider text-gray-600 sm:text-sm">
+                            Senior Citizens
+                        </h5>
+                        <p class="text-3xl font-bold text-blue-600 sm:text-4xl lg:text-5xl">
+                            {{ total_senior_citizens }}
+                        </p>
                     </div>
-                    <div class="stat-card card">
-                        <div class="card-body">
-                            <h5 class="card-title">Total Voters</h5>
-                            <p class="card-text">{{ total_voters }}</p>
-                        </div>
+                </div>
+
+                <!-- Total Voters -->
+                <div class="stat-card transform overflow-hidden rounded-2xl bg-white shadow-lg transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl">
+                    <div class="p-6 text-center">
+                        <h5 class="mb-2 text-xs font-medium uppercase tracking-wider text-gray-600 sm:text-sm">
+                            Total Voters
+                        </h5>
+                        <p class="text-3xl font-bold text-blue-600 sm:text-4xl lg:text-5xl">
+                            {{ total_voters }}
+                        </p>
                     </div>
-                    <div class="stat-card card">
-                        <div class="card-body">
-                            <h5 class="card-title">Total Non-Voters</h5>
-                            <p class="card-text">{{ total_non_voters }}</p>
-                        </div>
+                </div>
+
+                <!-- Total Non-Voters -->
+                <div class="stat-card transform overflow-hidden rounded-2xl bg-white shadow-lg transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl">
+                    <div class="p-6 text-center">
+                        <h5 class="mb-2 text-xs font-medium uppercase tracking-wider text-gray-600 sm:text-sm">
+                            Total Non-Voters
+                        </h5>
+                        <p class="text-3xl font-bold text-blue-600 sm:text-4xl lg:text-5xl">
+                            {{ total_non_voters }}
+                        </p>
                     </div>
                 </div>
             </div>
             
-            <div class="dashboard-see-more">
-                <button id="seeMoreBtn" onclick="toggleStats()">See More</button>
+            <!-- See More Button -->
+            <div class="mb-8 text-center">
+                <button 
+                    id="seeMoreBtn" 
+                    onclick="toggleStats()"
+                    class="min-w-[160px] rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 px-8 py-3 text-sm font-bold text-white shadow-lg transition-all hover:from-blue-700 hover:to-cyan-600 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 sm:px-10 sm:py-3.5 sm:text-base">
+                    See More
+                </button>
+            </div>
+
+            <!-- Charts Container - Responsive -->
+            <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                <!-- Population Chart -->
+                <div class="overflow-hidden rounded-2xl border border-blue-100 bg-white p-5 shadow-lg sm:p-6">
+                    <h3 class="mb-4 text-lg font-bold text-gray-800 sm:text-xl">
+                        Population by Purok
+                    </h3>
+                    <div class="relative h-64 sm:h-72 lg:h-80">
+                        <canvas id="purokBarGraph"></canvas>
+                    </div>
+                </div>
+
+                <!-- Calendar Widget -->
+                <div class="overflow-hidden rounded-2xl border border-blue-100 bg-white p-5 shadow-lg sm:p-6">
+                    <h3 class="mb-4 text-lg font-bold text-gray-800 sm:text-xl">
+                        Calendar
+                    </h3>
+                    <div class="calendar-widget">
+                        <!-- Calendar Header -->
+                        <div class="mb-4 flex items-center justify-between gap-3">
+                            <button 
+                                id="prevMonthBtn"
+                                class="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-b from-blue-600 to-blue-700 text-sm font-bold text-white transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:h-10 sm:w-10">
+                                ‹
+                            </button>
+                            <h3 id="calendarMonthYear" class="flex-1 text-center text-sm font-bold text-gray-800 sm:text-base">
+                                Month Year
+                            </h3>
+                            <button 
+                                id="nextMonthBtn"
+                                class="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-b from-blue-600 to-blue-700 text-sm font-bold text-white transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:h-10 sm:w-10">
+                                ›
+                            </button>
+                        </div>
+
+                        <!-- Calendar Grid -->
+                        <div class="calendar-grid">
+                            <!-- Weekday Headers -->
+                            <div class="mb-2 grid grid-cols-7 gap-1 sm:gap-2">
+                                <div class="py-2 text-center text-xs font-bold text-blue-700 sm:text-sm">Sun</div>
+                                <div class="py-2 text-center text-xs font-bold text-blue-700 sm:text-sm">Mon</div>
+                                <div class="py-2 text-center text-xs font-bold text-blue-700 sm:text-sm">Tue</div>
+                                <div class="py-2 text-center text-xs font-bold text-blue-700 sm:text-sm">Wed</div>
+                                <div class="py-2 text-center text-xs font-bold text-blue-700 sm:text-sm">Thu</div>
+                                <div class="py-2 text-center text-xs font-bold text-blue-700 sm:text-sm">Fri</div>
+                                <div class="py-2 text-center text-xs font-bold text-blue-700 sm:text-sm">Sat</div>
+                            </div>
+
+                            <!-- Calendar Days -->
+                            <div id="calendarGrid" class="grid grid-cols-7 gap-1 sm:gap-2">
+                                <!-- Days will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <script>
+        // Toggle More Stats
+        function toggleStats() {
+            const moreStats = document.getElementById('more-stats');
+            const seeMoreBtn = document.getElementById('seeMoreBtn');
+            
+            if (moreStats.classList.contains('hidden')) {
+                moreStats.classList.remove('hidden');
+                moreStats.classList.add('grid');
+                seeMoreBtn.textContent = 'See Less';
+            } else {
+                moreStats.classList.add('hidden');
+                moreStats.classList.remove('grid');
+                seeMoreBtn.textContent = 'See More';
+            }
+        }
+
+        // Calendar functionality
+        let currentDate = new Date();
+        let selectedDate = null;
+        let events = {};
+
+        function renderCalendar() {
+            const monthYear = document.getElementById('calendarMonthYear');
+            const grid = document.getElementById('calendarGrid');
+
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            monthYear.textContent = `${currentDate.toLocaleString('default', { month: 'long' })} ${year}`;
+
+            grid.innerHTML = '';
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const lastDate = new Date(year, month + 1, 0).getDate();
+
+            // Empty cells before month starts
+            for (let i = 0; i < firstDay; i++) {
+                const emptyEl = document.createElement('div');
+                emptyEl.className = 'invisible';
+                grid.appendChild(emptyEl);
+            }
+
+            // Actual days
+            for (let date = 1; date <= lastDate; date++) {
+                const dateEl = document.createElement('div');
+                const dateStr = `${year}-${month + 1}-${date}`;
+                const isToday = new Date().toDateString() === new Date(year, month, date).toDateString();
+                
+                dateEl.className = `
+                    aspect-square flex items-center justify-center rounded-lg border border-blue-100 
+                    bg-blue-50 text-xs font-semibold text-gray-800 transition-all cursor-pointer
+                    hover:bg-blue-100 hover:text-blue-700 sm:text-sm
+                    ${isToday ? 'bg-gradient-to-b from-blue-600 to-blue-700 text-white font-bold' : ''}
+                `;
+                dateEl.textContent = date;
+                dateEl.dataset.date = dateStr;
+                
+                dateEl.addEventListener('click', () => {
+                    if (selectedDate) selectedDate.classList.remove('ring-2', 'ring-blue-500');
+                    selectedDate = dateEl;
+                    dateEl.classList.add('ring-2', 'ring-blue-500');
+                });
+                
+                grid.appendChild(dateEl);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCalendar();
+
+            document.getElementById('prevMonthBtn').addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                renderCalendar();
+            });
+
+            document.getElementById('nextMonthBtn').addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                renderCalendar();
+            });
+
+            // Chart.js (responsive by default)
+            const ctx = document.getElementById('purokBarGraph');
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Purok 1', 'Purok 2', 'Purok 3', 'Purok 4', 'Purok 5'],
+                        datasets: [{
+                            label: 'Population',
+                            data: [120, 95, 150, 80, 110],
+                            backgroundColor: 'rgba(0, 114, 255, 0.6)',
+                            borderColor: 'rgba(0, 114, 255, 1)',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 {% endblock %}

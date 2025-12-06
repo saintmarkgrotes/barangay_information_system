@@ -2,58 +2,143 @@
 
 {% block head %}
     <title>Residents - Barangay Information System</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/residents.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
 {% endblock %}
 
 {% block content %}
-    <main class="residents-container">
-        <h1 class="residents-title">Residents</h1>
-        
-        <form method="GET" class="residents-search-form">
-            <input type="text" 
-                   name="search" 
-                   placeholder="Search by name..." 
-                   value="{{ request.args.get('search', '') }}" 
-                   class="search-input">
-            <button type="button" class="btn-primary" onclick="openAddModal()">
-                Add New Resident
-            </button>
-        </form>
+    <main class="w-full min-h-screen px-4 py-20 sm:px-6 lg:px-8 lg:py-10">
+        <div class="mx-auto max-w-7xl">
+            <!-- Page Title -->
+            <h1 class="mb-6 text-3xl font-bold text-blue-600 sm:mb-8 sm:text-4xl lg:text-5xl">
+                Residents
+            </h1>
+            
+            <!-- Search & Add Section - Responsive -->
+            <form method="GET" class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <input 
+                    type="text" 
+                    name="search" 
+                    placeholder="Search by name..." 
+                    value="{{ request.args.get('search', '') }}" 
+                    class="flex-1 rounded-full border-2 border-gray-300 bg-white px-5 py-3 text-base transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100 sm:text-sm">
+                
+                <button 
+                    type="button" 
+                    onclick="openAddModal()"
+                    class="w-full rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:from-blue-700 hover:to-cyan-600 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto sm:min-w-[180px]">
+                    + Add New Resident
+                </button>
+            </form>
 
-        <ul class="residents-list">
-            {% for resident in residents %}
-            <li class="resident-card">
-                <span class="resident-name">
-                    {{ resident.first_name }} {{ resident.middle_name }} {{ resident.last_name }}
-                </span>
-                <div class="resident-actions">
-                    <a href="{{ url_for('residents.resident_info', id=resident.id) }}" 
-                       class="btn-primary btn-sm">Info</a>
-                    {% if current_user.role == 'admin' %}
-                    <button type="button" 
-                            class="btn-success btn-sm" 
-                            onclick="openEditModal({{ resident.id }})">Edit</button>
-                    <form method="POST" 
-                          action="{{ url_for('residents.delete_resident', id=resident.id) }}" 
-                          style="display:inline;"
-                          onsubmit="return confirm('Delete this resident?');">
-                        <button type="submit" class="btn-danger btn-sm">Delete</button>
-                    </form>
-                    {% endif %}
+            <!-- Residents List - Responsive Cards -->
+            <ul class="space-y-3">
+                {% for resident in residents %}
+                <li class="transform overflow-hidden rounded-2xl bg-white shadow-md transition-all hover:shadow-lg">
+                    <!-- Mobile Layout (< 640px) -->
+                    <div class="flex flex-col gap-3 p-4 sm:hidden">
+                        <div class="flex items-start justify-between">
+                            <span class="text-base font-semibold text-gray-800 leading-tight">
+                                {{ resident.first_name }} {{ resident.middle_name }} {{ resident.last_name }}
+                            </span>
+                        </div>
+                        
+                        <!-- Action Buttons - Mobile -->
+                        <div class="grid grid-cols-3 gap-2">
+                            <a 
+                                href="{{ url_for('residents.resident_info', id=resident.id) }}" 
+                                class="rounded-lg bg-blue-100 px-3 py-2 text-center text-xs font-bold text-blue-700 transition-colors hover:bg-blue-200">
+                                Info
+                            </a>
+                            {% if current_user.role == 'admin' %}
+                            <button 
+                                type="button" 
+                                onclick="openEditModal({{ resident.id }})"
+                                class="rounded-lg bg-green-100 px-3 py-2 text-xs font-bold text-green-700 transition-colors hover:bg-green-200">
+                                Edit
+                            </button>
+                            <form 
+                                method="POST" 
+                                action="{{ url_for('residents.delete_resident', id=resident.id) }}" 
+                                onsubmit="return confirm('Delete this resident?');">
+                                <button 
+                                    type="submit" 
+                                    class="w-full rounded-lg bg-red-100 px-3 py-2 text-xs font-bold text-red-700 transition-colors hover:bg-red-200">
+                                    Delete
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Tablet & Desktop Layout (≥ 640px) -->
+                    <div class="hidden items-center justify-between gap-4 p-5 sm:flex">
+                        <span class="flex-1 text-lg font-semibold text-gray-800">
+                            {{ resident.first_name }} {{ resident.middle_name }} {{ resident.last_name }}
+                        </span>
+                        
+                        <!-- Action Buttons - Desktop -->
+                        <div class="flex gap-2">
+                            <a 
+                                href="{{ url_for('residents.resident_info', id=resident.id) }}" 
+                                class="rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-2 text-sm font-bold text-white shadow-md transition-all hover:from-blue-700 hover:to-blue-800 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                Info
+                            </a>
+                            {% if current_user.role == 'admin' %}
+                            <button 
+                                type="button" 
+                                onclick="openEditModal({{ resident.id }})"
+                                class="rounded-lg bg-gradient-to-r from-green-600 to-green-700 px-4 py-2 text-sm font-bold text-white shadow-md transition-all hover:from-green-700 hover:to-green-800 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                                Edit
+                            </button>
+                            <form 
+                                method="POST" 
+                                action="{{ url_for('residents.delete_resident', id=resident.id) }}" 
+                                style="display:inline;"
+                                onsubmit="return confirm('Delete this resident?');">
+                                <button 
+                                    type="submit" 
+                                    class="rounded-lg bg-gradient-to-r from-red-600 to-red-700 px-4 py-2 text-sm font-bold text-white shadow-md transition-all hover:from-red-700 hover:to-red-800 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                                    Delete
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </li>
+                {% else %}
+                <li class="rounded-2xl bg-white p-8 text-center text-gray-500 shadow-md">
+                    No residents found.
+                </li>
+                {% endfor %}
+            </ul>
+
+            <!-- Pagination - Responsive -->
+            {% if residents|length > 0 %}
+            <div class="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
+                <p class="text-sm text-gray-600">
+                    Showing {{ residents|length }} resident(s)
+                </p>
+                <div class="flex gap-2">
+                    <button class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Previous
+                    </button>
+                    <button class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        1
+                    </button>
+                    <button class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Next
+                    </button>
                 </div>
-            </li>
-            {% else %}
-            <li class="resident-card text-center">No residents found.</li>
-            {% endfor %}
-        </ul>
+            </div>
+            {% endif %}
+        </div>
     </main>
 
     {% include 'partials/resident_add_modal.html' %}
     {% include 'partials/resident_edit_modal.html' %}
 
     <script src="{{ url_for('static', filename='js/modal.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/residents.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/resident.js') }}"></script>
     <script>
         const residents = {{ residents | tojson }};
     </script>

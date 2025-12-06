@@ -1,0 +1,97 @@
+<!-- templates/partials/official_add_modal.html -->
+<div id="addOfficialModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/50 backdrop-blur-sm">
+    <div class="flex min-h-full items-center justify-center p-4">
+        <div class="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
+            <!-- Modal Header -->
+            <div class="sticky top-0 z-10 flex items-center justify-between border-b-2 border-blue-100 bg-white px-6 py-5 rounded-t-2xl">
+                <h2 class="text-2xl font-bold text-blue-600">Add Elected Official</h2>
+                <button 
+                    type="button" 
+                    onclick="closeAddModal()" 
+                    class="flex h-10 w-10 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <span class="text-3xl leading-none">&times;</span>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <form method="POST" action="{{ url_for('officials.add_official') }}" enctype="multipart/form-data" id="addOfficialForm">
+                <div class="max-h-[calc(100vh-200px)] overflow-y-auto px-6 py-6">
+                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                        <!-- Name -->
+                        <div class="md:col-span-2">
+                            <label for="add_name" class="mb-2 block text-sm font-semibold text-gray-700">
+                                Full Name <span class="text-red-500">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="add_name" 
+                                name="name" 
+                                required
+                                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                        </div>
+
+                        <!-- Position -->
+                        <div>
+                            <label for="add_position" class="mb-2 block text-sm font-semibold text-gray-700">
+                                Position <span class="text-red-500">*</span>
+                            </label>
+                            <select 
+                                id="add_position" 
+                                name="position" 
+                                required
+                                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                                <option value="">Select position</option>
+                                <option value="Chairman">Chairman</option>
+                                <option value="Kagawad">Kagawad</option>
+                            </select>
+                            <p class="mt-1 text-xs text-gray-500">Only 1 Chairman and up to 7 Kagawad allowed</p>
+                        </div>
+
+                        <!-- Order -->
+                        <div>
+                            <label for="add_order" class="mb-2 block text-sm font-semibold text-gray-700">
+                                Kagawad Order (1-7)
+                            </label>
+                            <input 
+                                type="number" 
+                                id="add_order" 
+                                name="order" 
+                                min="1" 
+                                max="7"
+                                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                            <p class="mt-1 text-xs text-gray-500">Leave blank for auto-assignment</p>
+                        </div>
+
+                        <!-- Photo Upload -->
+                        <div class="md:col-span-2">
+                            <label for="add_photo" class="mb-2 block text-sm font-semibold text-gray-700">
+                                Photo (JPG, PNG)
+                            </label>
+                            <input 
+                                type="file" 
+                                id="add_photo" 
+                                name="photo" 
+                                accept="image/*"
+                                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all file:mr-4 file:rounded-lg file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-blue-700 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="sticky bottom-0 flex flex-col-reverse gap-3 border-t-2 border-blue-100 bg-white px-6 py-4 rounded-b-2xl sm:flex-row sm:justify-end">
+                    <button 
+                        type="button" 
+                        onclick="closeAddModal()"
+                        class="w-full rounded-full border border-gray-300 bg-white px-6 py-3 text-sm font-bold text-gray-700 transition-all hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 sm:w-auto">
+                        Cancel
+                    </button>
+                    <button 
+                        type="submit"
+                        class="w-full rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:from-blue-700 hover:to-cyan-600 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto">
+                        Add Official
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

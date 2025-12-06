@@ -2,149 +2,153 @@
 
 {% block head %}
     <title>Pending Residents - Barangay Information System</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/residents.css') }}">
-    <style>
-        .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .status-pending {
-            background-color: #fef3c7;
-            color: #92400e;
-        }
-        .status-approved {
-            background-color: #d1fae5;
-            color: #065f46;
-        }
-        .status-rejected {
-            background-color: #fee2e2;
-            color: #991b1b;
-        }
-        .pending-details {
-            font-size: 13px;
-            color: #6b7280;
-            margin-top: 4px;
-        }
-        .review-actions {
-            display: flex;
-            gap: 8px;
-        }
-        .btn-approve {
-            background-color: #10b981;
-            color: white;
-            padding: 6px 16px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .btn-approve:hover {
-            background-color: #059669;
-        }
-        .btn-reject {
-            background-color: #ef4444;
-            color: white;
-            padding: 6px 16px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .btn-reject:hover {
-            background-color: #dc2626;
-        }
-        .pending-info {
-            background: #f9fafb;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 8px;
-            font-size: 13px;
-        }
-        .pending-info strong {
-            color: #374151;
-        }
-    </style>
-    
-    <main class="residents-container">
-        <h1 class="residents-title">
-            {% if current_user.role == 'admin' %}
-                Pending Residents for Approval
-            {% else %}
-                My Submitted Residents
-            {% endif %}
-        </h1>
-        
-        {% if current_user.role == 'admin' %}
-        <div style="background: #dbeafe; padding: 12px; border-radius: 8px; margin-bottom: 20px; color: #1e40af;">
-            <strong>Admin Notice:</strong> Review and approve/reject resident submissions below.
-        </div>
-        {% endif %}
+{% endblock %}
 
-        <ul class="residents-list">
-            {% for pending in pending_residents %}
-            <li class="resident-card">
-                <div style="flex: 1;">
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <span class="resident-name">
-                            {{ pending.first_name }} {{ pending.middle_name }} {{ pending.last_name }}
-                        </span>
-                        <span class="status-badge status-{{ pending.status }}">
-                            {{ pending.status|upper }}
-                        </span>
+{% block content %}
+    <main class="w-full min-h-screen px-4 py-20 sm:px-6 lg:px-8 lg:py-10">
+        <div class="mx-auto max-w-7xl">
+            <!-- Page Title -->
+            <h1 class="mb-4 text-3xl font-bold text-blue-600 sm:mb-6 sm:text-4xl lg:text-5xl">
+                {% if current_user.role == 'admin' %}
+                    Pending Residents for Approval
+                {% else %}
+                    My Submitted Residents
+                {% endif %}
+            </h1>
+            
+            <!-- Admin Notice - Responsive -->
+            {% if current_user.role == 'admin' %}
+            <div class="mb-6 rounded-2xl bg-blue-100 p-4 sm:p-5">
+                <div class="flex items-start gap-3">
+                    <div class="text-2xl">ℹ️</div>
+                    <div>
+                        <p class="font-bold text-blue-900">Admin Notice</p>
+                        <p class="text-sm text-blue-800 sm:text-base">
+                            Review and approve/reject resident submissions below.
+                        </p>
                     </div>
-                    
-                    <div class="pending-details">
-                        Submitted by: <strong>{{ pending.submitter.username }}</strong> on 
-                        {{ pending.submitted_at.strftime('%B %d, %Y at %I:%M %p') }}
-                    </div>
-                    
-                    <div class="pending-info">
-                        <strong>Gender:</strong> {{ pending.gender }} | 
-                        <strong>Age:</strong> {{ pending.age }} | 
-                        <strong>Purok:</strong> {{ pending.purok }} | 
-                        <strong>Voter:</strong> {{ pending.voter_status }}
-                        {% if pending.new_household_no %}
-                        <br><strong>New Household:</strong> {{ pending.new_household_no }}
-                        {% elif pending.household_id %}
-                        <br><strong>Household ID:</strong> {{ pending.household_id }}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Pending Residents List - Responsive -->
+            <ul class="space-y-4">
+                {% for pending in pending_residents %}
+                <li class="overflow-hidden rounded-2xl bg-white shadow-md transition-all hover:shadow-lg">
+                    <div class="p-5">
+                        <!-- Header Section -->
+                        <div class="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                            <!-- Name & Status -->
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="text-lg font-bold text-gray-800 sm:text-xl">
+                                    {{ pending.first_name }} {{ pending.middle_name }} {{ pending.last_name }}
+                                </span>
+                                
+                                <!-- Status Badge -->
+                                <span class="inline-block rounded-full px-3 py-1 text-xs font-bold uppercase
+                                    {% if pending.status == 'pending' %}bg-yellow-100 text-yellow-800
+                                    {% elif pending.status == 'approved' %}bg-green-100 text-green-800
+                                    {% else %}bg-red-100 text-red-800{% endif %}">
+                                    {{ pending.status }}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <!-- Submission Info -->
+                        <div class="mb-3 text-sm text-gray-600 sm:text-base">
+                            <strong>Submitted by:</strong> {{ pending.submitter.username }} on 
+                            {{ pending.submitted_at.strftime('%B %d, %Y at %I:%M %p') }}
+                        </div>
+                        
+                        <!-- Details Section - Responsive Grid -->
+                        <div class="mb-4 rounded-xl bg-gray-50 p-4">
+                            <div class="grid grid-cols-1 gap-2 text-sm sm:grid-cols-2 sm:text-base">
+                                <div>
+                                    <strong class="text-gray-700">Gender:</strong> 
+                                    <span class="text-gray-600">{{ pending.gender }}</span>
+                                </div>
+                                <div>
+                                    <strong class="text-gray-700">Age:</strong> 
+                                    <span class="text-gray-600">{{ pending.age }}</span>
+                                </div>
+                                <div>
+                                    <strong class="text-gray-700">Purok:</strong> 
+                                    <span class="text-gray-600">{{ pending.purok }}</span>
+                                </div>
+                                <div>
+                                    <strong class="text-gray-700">Voter:</strong> 
+                                    <span class="text-gray-600">{{ pending.voter_status }}</span>
+                                </div>
+                                
+                                {% if pending.new_household_no %}
+                                <div class="sm:col-span-2">
+                                    <strong class="text-gray-700">New Household:</strong> 
+                                    <span class="text-gray-600">{{ pending.new_household_no }}</span>
+                                </div>
+                                {% elif pending.household_id %}
+                                <div class="sm:col-span-2">
+                                    <strong class="text-gray-700">Household ID:</strong> 
+                                    <span class="text-gray-600">{{ pending.household_id }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Review Info (if reviewed) -->
+                        {% if pending.status != 'pending' %}
+                        <div class="mb-3 text-sm text-gray-600 sm:text-base">
+                            <strong>Reviewed by:</strong> 
+                            {{ pending.reviewer.username if pending.reviewer else 'N/A' }} on 
+                            {{ pending.reviewed_at.strftime('%B %d, %Y at %I:%M %p') if pending.reviewed_at else 'N/A' }}
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Action Buttons - Responsive -->
+                        {% if current_user.role == 'admin' and pending.status == 'pending' %}
+                        <div class="flex flex-col gap-3 sm:flex-row">
+                            <form 
+                                method="POST" 
+                                action="{{ url_for('residents.review_resident', id=pending.id, action='approve') }}" 
+                                class="flex-1"
+                                onsubmit="return confirm('Approve this resident?');">
+                                <button 
+                                    type="submit" 
+                                    class="w-full rounded-full bg-gradient-to-r from-green-600 to-green-700 px-6 py-3 text-sm font-bold text-white shadow-md transition-all hover:from-green-700 hover:to-green-800 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-green-300">
+                                    ✓ Approve
+                                </button>
+                            </form>
+                            <form 
+                                method="POST" 
+                                action="{{ url_for('residents.review_resident', id=pending.id, action='reject') }}" 
+                                class="flex-1"
+                                onsubmit="return confirm('Reject this submission?');">
+                                <button 
+                                    type="submit" 
+                                    class="w-full rounded-full bg-gradient-to-r from-red-600 to-red-700 px-6 py-3 text-sm font-bold text-white shadow-md transition-all hover:from-red-700 hover:to-red-800 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-red-300">
+                                    ✗ Reject
+                                </button>
+                            </form>
+                        </div>
                         {% endif %}
                     </div>
-                    
-                    {% if pending.status != 'pending' %}
-                    <div class="pending-details" style="margin-top: 8px;">
-                        Reviewed by: <strong>{{ pending.reviewer.username if pending.reviewer else 'N/A' }}</strong> on 
-                        {{ pending.reviewed_at.strftime('%B %d, %Y at %I:%M %p') if pending.reviewed_at else 'N/A' }}
-                    </div>
-                    {% endif %}
-                </div>
-                
-                {% if current_user.role == 'admin' and pending.status == 'pending' %}
-                <div class="review-actions">
-                    <form method="POST" action="{{ url_for('review_resident', id=pending.id, action='approve') }}" style="display:inline;">
-                        <button type="submit" class="btn-approve" onclick="return confirm('Approve this resident?');">
-                            ✓ Approve
-                        </button>
-                    </form>
-                    <form method="POST" action="{{ url_for('review_resident', id=pending.id, action='reject') }}" style="display:inline;">
-                        <button type="submit" class="btn-reject" onclick="return confirm('Reject this submission?');">
-                            ✗ Reject
-                        </button>
-                    </form>
-                </div>
-                {% endif %}
-            </li>
-            {% else %}
-            <li class="resident-card text-center">
-                {% if current_user.role == 'admin' %}
-                    No pending residents to review.
+                </li>
                 {% else %}
-                    You haven't submitted any residents yet.
-                {% endif %}
-            </li>
-            {% endfor %}
-        </ul>
+                <!-- Empty State - Responsive -->
+                <li class="flex flex-col items-center justify-center rounded-2xl bg-white p-12 text-center shadow-md sm:p-16">
+                    <div class="mb-4 text-6xl opacity-30">⏳</div>
+                    <p class="mb-2 text-xl font-semibold text-gray-800 sm:text-2xl">
+                        {% if current_user.role == 'admin' %}
+                            No pending residents to review.
+                        {% else %}
+                            You haven't submitted any residents yet.
+                        {% endif %}
+                    </p>
+                    <p class="text-sm text-gray-600 sm:text-base">
+                        Check back later for updates.
+                    </p>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
     </main>
 {% endblock %}

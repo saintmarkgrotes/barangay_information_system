@@ -2,91 +2,158 @@
 
 {% block head %}
     <title>Elected Officials - Barangay Information System</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/elected_officials.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
 {% endblock %}
 
 {% block body %}
     {{ super() }}
-    <div class="dashboard-main">
-        <div class="section-header">
-            <h1 class="dashboard-title">Elected Officials</h1>
-            {% if current_user.is_authenticated and current_user.role == 'admin' %}
-                <button class="btn-add" onclick="openAddModal()">+ Add Official</button>
-            {% endif %}
-        </div>
+    <div class="w-full min-h-screen px-4 py-20 sm:px-6 lg:px-8 lg:py-10">
+        <div class="mx-auto max-w-7xl">
+            <!-- Header Section - Responsive -->
+            <div class="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
+                <h1 class="text-3xl font-bold text-blue-600 sm:text-4xl lg:text-5xl">
+                    Elected Officials
+                </h1>
+                {% if current_user.is_authenticated and current_user.role == 'admin' %}
+                <button 
+                    onclick="openAddModal()" 
+                    class="w-full rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:from-blue-700 hover:to-cyan-600 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto sm:min-w-[160px]">
+                    + Add Official
+                </button>
+                {% endif %}
+            </div>
 
-        <!-- Chairman Section -->
-        <div class="chairman-section">
-            <h2 class="section-subtitle">Barangay Chairman</h2>
-            {% if chairman %}
-                <div class="chairman-row">
-                    <img class="official-photo" 
-                         src="{{ url_for('static', filename='uploads/elected_officials/' ~ (chairman.photo_filename or 'default.png')) }}" 
-                         alt="{{ chairman.name }}"
-                         onerror="this.src='{{ url_for('static', filename='images/default-avatar.png') }}'">
-                    <div class="chairman-info">
-                        <div class="chairman-name">{{ chairman.name }}</div>
-                        <div class="chairman-title">Punong Barangay</div>
-                    </div>
-                    {% if current_user.is_authenticated and current_user.role == 'admin' %}
-                        <div class="action-buttons">
-                            <button class="btn-link" onclick="openEditModal({{ chairman.id }}, '{{ chairman.name|replace("'", "\\'") }}', '{{ chairman.position }}', null, '{{ chairman.photo_filename or '' }}')">Edit</button>
-                            <form method="post" 
-                                  action="{{ url_for('officials.delete_official', id=chairman.id) }}" 
-                                  style="display:inline" 
-                                  onsubmit="return confirm('Delete chairman?')">
-                                <button type="submit" class="btn-link delete">Delete</button>
+            <!-- Chairman Section - Responsive -->
+            <div class="mb-8 overflow-hidden rounded-2xl bg-white p-5 shadow-lg sm:p-6 lg:p-8">
+                <h2 class="mb-4 text-xl font-bold text-gray-800 sm:text-2xl">
+                    Barangay Chairman
+                </h2>
+                
+                {% if chairman %}
+                <div class="flex flex-col items-center gap-4 sm:flex-row sm:items-start">
+                    <!-- Photo -->
+                    <img 
+                        class="h-24 w-24 flex-shrink-0 rounded-full border-4 border-blue-600 object-cover shadow-md sm:h-28 sm:w-28 lg:h-32 lg:w-32" 
+                        src="{{ url_for('static', filename='uploads/elected_officials/' ~ (chairman.photo_filename or 'default.png')) }}" 
+                        alt="{{ chairman.name }}"
+                        onerror="this.src='{{ url_for('static', filename='images/default-avatar.png') }}'">
+                    
+                    <!-- Info & Actions -->
+                    <div class="flex flex-1 flex-col items-center gap-3 text-center sm:items-start sm:text-left">
+                        <div>
+                            <div class="text-xl font-bold text-gray-800 sm:text-2xl">
+                                {{ chairman.name }}
+                            </div>
+                            <div class="text-sm text-gray-600 sm:text-base">
+                                Punong Barangay
+                            </div>
+                        </div>
+                        
+                        {% if current_user.is_authenticated and current_user.role == 'admin' %}
+                        <div class="flex flex-wrap gap-2">
+                            <button 
+                                onclick="openEditModal({{ chairman.id }}, '{{ chairman.name|replace("'", "\\'") }}', '{{ chairman.position }}', null, '{{ chairman.photo_filename or '' }}')"
+                                class="rounded-lg bg-blue-100 px-4 py-2 text-sm font-bold text-blue-700 transition-colors hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                Edit
+                            </button>
+                            <form 
+                                method="post" 
+                                action="{{ url_for('officials.delete_official', id=chairman.id) }}" 
+                                style="display:inline" 
+                                onsubmit="return confirm('Delete chairman?')">
+                                <button 
+                                    type="submit" 
+                                    class="rounded-lg bg-red-100 px-4 py-2 text-sm font-bold text-red-700 transition-colors hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500">
+                                    Delete
+                                </button>
                             </form>
                         </div>
-                    {% endif %}
-                </div>
-            {% else %}
-                <p class="empty-message">No Chairman set.</p>
-            {% endif %}
-        </div>
-
-        <!-- Kagawad Section -->
-        <h2 class="section-subtitle">Barangay Kagawad</h2>
-        <div class="kagawad-grid">
-            {% for k in kagawads %}
-                <div class="kagawad-card">
-                    <div class="kagawad-number">{{ k.order or loop.index }}</div>
-                    <img class="official-photo small" 
-                         src="{{ url_for('static', filename='uploads/elected_officials/' ~ (k.photo_filename or 'default.png')) }}" 
-                         alt="{{ k.name }}"
-                         onerror="this.src='{{ url_for('static', filename='images/default-avatar.png') }}'">
-                    <div class="kagawad-info">
-                        <div class="kagawad-name">{{ k.name }}</div>
-                        <div class="kagawad-subtitle">Kagawad</div>
+                        {% endif %}
                     </div>
-                    {% if current_user.is_authenticated and current_user.role == 'admin' %}
-                        <div class="action-buttons">
-                            <button class="btn-link" onclick="openEditModal({{ k.id }}, '{{ k.name|replace("'", "\\'") }}', '{{ k.position }}', {{ k.order or 'null' }}, '{{ k.photo_filename or '' }}')">Edit</button>
-                            <form method="post" 
-                                  action="{{ url_for('officials.delete_official', id=k.id) }}" 
-                                  style="display:inline" 
-                                  onsubmit="return confirm('Delete kagawad?')">
-                                <button type="submit" class="btn-link delete">Delete</button>
-                            </form>
-                        </div>
-                    {% endif %}
                 </div>
-            {% endfor %}
+                {% else %}
+                <p class="text-gray-500">No Chairman set.</p>
+                {% endif %}
+            </div>
+
+            <!-- Kagawad Section - Responsive Grid -->
+            <h2 class="mb-4 text-xl font-bold text-gray-800 sm:mb-6 sm:text-2xl">
+                Barangay Kagawad
+            </h2>
             
-            {% set count = kagawads|length %}
-            {% for i in range(count + 1, 8) %}
-                <div class="kagawad-card vacant">
-                    <div class="kagawad-number">{{ i }}</div>
-                    <div class="kagawad-info">
-                        <div class="kagawad-name">Vacant Position</div>
-                        <div class="kagawad-subtitle">Kagawad Slot {{ i }}</div>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {% for k in kagawads %}
+                <div class="flex transform items-center gap-3 overflow-hidden rounded-2xl bg-white p-4 shadow-md transition-all hover:-translate-y-1 hover:shadow-lg">
+                    <!-- Number Badge -->
+                    <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">
+                        {{ k.order or loop.index }}
                     </div>
-                    {% if current_user.is_authenticated and current_user.role == 'admin' %}
-                        <button class="btn-link" onclick="openAddModal()">Add</button>
-                    {% endif %}
+                    
+                    <!-- Photo -->
+                    <img 
+                        class="h-14 w-14 flex-shrink-0 rounded-full border-3 border-blue-600 object-cover" 
+                        src="{{ url_for('static', filename='uploads/elected_officials/' ~ (k.photo_filename or 'default.png')) }}" 
+                        alt="{{ k.name }}"
+                        onerror="this.src='{{ url_for('static', filename='images/default-avatar.png') }}'">
+                    
+                    <!-- Info -->
+                    <div class="min-w-0 flex-1">
+                        <div class="truncate text-sm font-bold text-gray-800 sm:text-base">
+                            {{ k.name }}
+                        </div>
+                        <div class="text-xs text-gray-600 sm:text-sm">
+                            Kagawad
+                        </div>
+                        
+                        {% if current_user.is_authenticated and current_user.role == 'admin' %}
+                        <div class="mt-2 flex gap-2">
+                            <button 
+                                onclick="openEditModal({{ k.id }}, '{{ k.name|replace("'", "\\'") }}', '{{ k.position }}', {{ k.order or 'null' }}, '{{ k.photo_filename or '' }}')"
+                                class="rounded bg-blue-100 px-2 py-1 text-xs font-bold text-blue-700 hover:bg-blue-200">
+                                Edit
+                            </button>
+                            <form 
+                                method="post" 
+                                action="{{ url_for('officials.delete_official', id=k.id) }}" 
+                                style="display:inline" 
+                                onsubmit="return confirm('Delete kagawad?')">
+                                <button 
+                                    type="submit" 
+                                    class="rounded bg-red-100 px-2 py-1 text-xs font-bold text-red-700 hover:bg-red-200">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
                 </div>
-            {% endfor %}
+                {% endfor %}
+                
+                <!-- Vacant Positions -->
+                {% set count = kagawads|length %}
+                {% for i in range(count + 1, 8) %}
+                <div class="flex items-center gap-3 rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 p-4">
+                    <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gray-300 text-sm font-bold text-gray-600">
+                        {{ i }}
+                    </div>
+                    <div class="flex-1">
+                        <div class="text-sm font-bold text-gray-600 sm:text-base">
+                            Vacant Position
+                        </div>
+                        <div class="text-xs text-gray-500 sm:text-sm">
+                            Kagawad Slot {{ i }}
+                        </div>
+                        {% if current_user.is_authenticated and current_user.role == 'admin' %}
+                        <button 
+                            onclick="openAddModal()" 
+                            class="mt-2 rounded bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700 hover:bg-blue-200">
+                            Add
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 

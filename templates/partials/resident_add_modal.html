@@ -1,94 +1,308 @@
-<div id="addResidentModal" class="modal-overlay">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2 class="modal-title">Add New Resident</h2>
-            <button type="button" class="modal-close" onclick="closeAddModal()">&times;</button>
-        </div>
-        <form method="POST" action="{{ url_for('residents.add_resident') }}" id="addResidentForm">
-            <div class="modal-body">
-                <div class="modal-form">
-                    <div class="form-group">
-                        <label for="last_name">Last Name *</label>
-                        <input type="text" id="last_name" name="last_name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="first_name">First Name *</label>
-                        <input type="text" id="first_name" name="first_name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="middle_name">Middle Name</label>
-                        <input type="text" id="middle_name" name="middle_name">
-                    </div>
-                    <div class="form-group">
-                        <label for="gender">Gender *</label>
-                        <select id="gender" name="gender" required>
-                            <option value="">Select gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="date_of_birth">Date of Birth</label>
-                        <input type="date" id="date_of_birth" name="date_of_birth">
-                    </div>
-                    <div class="form-group">
-                        <label for="purok">Purok *</label>
-                        <input type="text" id="purok" name="purok" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="age">Age *</label>
-                        <input type="number" min="0" id="age" name="age" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="place_of_birth">Place of Birth</label>
-                        <input type="text" id="place_of_birth" name="place_of_birth">
-                    </div>
-                    <div class="form-group">
-                        <label for="civil_status">Civil Status</label>
-                        <input type="text" id="civil_status" name="civil_status">
-                    </div>
-                    <div class="form-group">
-                        <label for="citizenship">Citizenship</label>
-                        <input type="text" id="citizenship" name="citizenship">
-                    </div>
-                    <div class="form-group">
-                        <label for="occupation">Occupation</label>
-                        <input type="text" id="occupation" name="occupation">
-                    </div>
-                    <div class="form-group">
-                        <label for="voter_status">Voter Status *</label>
-                        <select id="voter_status" name="voter_status" required>
-                            <option value="">Select status</option>
-                            <option value="Voter">Voter</option>
-                            <option value="Non-Voter">Non-Voter</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="senior_citizen">Senior Citizen *</label>
-                        <select id="senior_citizen" name="senior_citizen" required>
-                            <option value="">Select status</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
-                    </div>
-                    <div class="form-group form-group-full">
-                        <label for="household_select">Household</label>
-                        <select id="household_select" name="household_select" onchange="toggleNewHousehold(this.value)">
-                            <option value="none">-- No household --</option>
-                            {% for h in households %}
-                            <option value="{{ h.id }}">{{ h.household_no }} — {{ h.barangay or '' }} {{ h.city_municipality or '' }}</option>
-                            {% endfor %}
-                            <option value="new">+ Add new household</option>
-                        </select>
-                    </div>
+<!-- templates/partials/resident_add_modal.html - FIXED VERSION -->
+<div id="addResidentModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/50 backdrop-blur-sm">
+    <div class="flex min-h-full items-center justify-center p-4">
+        <div class="relative w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
+            <!-- Modal Header -->
+            <div class="sticky top-0 z-10 flex items-center justify-between border-b-2 border-blue-100 bg-white px-6 py-5 rounded-t-2xl">
+                <h2 class="text-2xl font-bold text-blue-600">Add New Resident</h2>
+                <button 
+                    type="button" 
+                    onclick="closeAddModal()" 
+                    class="flex h-10 w-10 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <span class="text-3xl leading-none">&times;</span>
+                </button>
+            </div>
 
-                    {% include 'partials/household_fields.html' with context %}
+            <!-- Modal Body -->
+            <form method="POST" action="{{ url_for('residents.add_resident') }}" id="addResidentForm">
+                <div class="max-h-[calc(100vh-200px)] overflow-y-auto px-6 py-6">
+                    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                        <!-- Last Name -->
+                        <div>
+                            <label class="mb-2 block text-sm font-semibold text-gray-700">
+                                Last Name <span class="text-red-500">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                name="last_name" 
+                                required
+                                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                        </div>
+
+                        <!-- First Name -->
+                        <div>
+                            <label class="mb-2 block text-sm font-semibold text-gray-700">
+                                First Name <span class="text-red-500">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                name="first_name" 
+                                required
+                                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                        </div>
+
+                        <!-- Middle Name -->
+                        <div>
+                            <label class="mb-2 block text-sm font-semibold text-gray-700">
+                                Middle Name
+                            </label>
+                            <input 
+                                type="text" 
+                                name="middle_name"
+                                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                        </div>
+
+                        <!-- Gender -->
+                        <div>
+                            <label class="mb-2 block text-sm font-semibold text-gray-700">
+                                Gender <span class="text-red-500">*</span>
+                            </label>
+                            <select 
+                                name="gender" 
+                                required
+                                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                                <option value="">Select gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+
+                        <!-- Date of Birth -->
+                        <div>
+                            <label class="mb-2 block text-sm font-semibold text-gray-700">
+                                Date of Birth
+                            </label>
+                            <input 
+                                type="date" 
+                                id="date_of_birth"
+                                name="date_of_birth"
+                                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                        </div>
+
+                        <!-- Age -->
+                        <div>
+                            <label class="mb-2 block text-sm font-semibold text-gray-700">
+                                Age <span class="text-red-500">*</span>
+                            </label>
+                            <input 
+                                type="number" 
+                                id="age"
+                                name="age" 
+                                min="0" 
+                                required
+                                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                        </div>
+
+                        <!-- Purok -->
+                        <div>
+                            <label class="mb-2 block text-sm font-semibold text-gray-700">
+                                Purok <span class="text-red-500">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                name="purok" 
+                                required
+                                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                        </div>
+
+                        <!-- Place of Birth -->
+                        <div>
+                            <label class="mb-2 block text-sm font-semibold text-gray-700">
+                                Place of Birth
+                            </label>
+                            <input 
+                                type="text" 
+                                name="place_of_birth"
+                                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                        </div>
+
+                        <!-- Civil Status -->
+                        <div>
+                            <label class="mb-2 block text-sm font-semibold text-gray-700">
+                                Civil Status
+                            </label>
+                            <input 
+                                type="text" 
+                                name="civil_status"
+                                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                        </div>
+
+                        <!-- Citizenship -->
+                        <div>
+                            <label class="mb-2 block text-sm font-semibold text-gray-700">
+                                Citizenship
+                            </label>
+                            <input 
+                                type="text" 
+                                name="citizenship"
+                                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                        </div>
+
+                        <!-- Occupation -->
+                        <div>
+                            <label class="mb-2 block text-sm font-semibold text-gray-700">
+                                Occupation
+                            </label>
+                            <input 
+                                type="text" 
+                                name="occupation"
+                                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                        </div>
+
+                        <!-- Voter Status -->
+                        <div>
+                            <label class="mb-2 block text-sm font-semibold text-gray-700">
+                                Voter Status <span class="text-red-500">*</span>
+                            </label>
+                            <select 
+                                name="voter_status" 
+                                required
+                                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                                <option value="">Select status</option>
+                                <option value="Voter">Voter</option>
+                                <option value="Non-Voter">Non-Voter</option>
+                            </select>
+                        </div>
+
+                        <!-- Senior Citizen -->
+                        <div>
+                            <label class="mb-2 block text-sm font-semibold text-gray-700">
+                                Senior Citizen <span class="text-red-500">*</span>
+                            </label>
+                            <select 
+                                name="senior_citizen" 
+                                required
+                                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                                <option value="">Select status</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+
+                        <!-- Household -->
+                        <div class="sm:col-span-2 lg:col-span-3">
+                            <label class="mb-2 block text-sm font-semibold text-gray-700">
+                                Household
+                            </label>
+                            <select 
+                                id="household_select"
+                                name="household_select" 
+                                onchange="toggleNewHousehold(this.value)"
+                                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                                <option value="none">-- No household --</option>
+                                {% for h in households %}
+                                <option value="{{ h.id }}">{{ h.household_no }} — {{ h.barangay or '' }} {{ h.city_municipality or '' }}</option>
+                                {% endfor %}
+                                <option value="new">+ Add new household</option>
+                            </select>
+                        </div>
+
+                        <!-- New Household Fields (Hidden by default) -->
+                        <div id="new_household_fields" class="hidden sm:col-span-2 lg:col-span-3 rounded-xl border-2 border-blue-200 bg-blue-50 p-5">
+                            <h4 class="mb-4 text-lg font-bold text-blue-600">New Household Information</h4>
+                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                                <div>
+                                    <label class="mb-2 block text-sm font-semibold text-gray-700">
+                                        Household No. <span class="text-red-500">*</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        name="new_household_no" 
+                                        placeholder="e.g. 00187B"
+                                        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                                </div>
+                                <div>
+                                    <label class="mb-2 block text-sm font-semibold text-gray-700">Region</label>
+                                    <input 
+                                        type="text" 
+                                        name="new_region"
+                                        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                                </div>
+                                <div>
+                                    <label class="mb-2 block text-sm font-semibold text-gray-700">Province</label>
+                                    <input 
+                                        type="text" 
+                                        name="new_province"
+                                        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                                </div>
+                                <div>
+                                    <label class="mb-2 block text-sm font-semibold text-gray-700">City/Municipality</label>
+                                    <input 
+                                        type="text" 
+                                        name="new_city_municipality"
+                                        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                                </div>
+                                <div>
+                                    <label class="mb-2 block text-sm font-semibold text-gray-700">Barangay</label>
+                                    <input 
+                                        type="text" 
+                                        name="new_barangay"
+                                        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                                </div>
+                                <div>
+                                    <label class="mb-2 block text-sm font-semibold text-gray-700">Purok</label>
+                                    <input 
+                                        type="text" 
+                                        name="new_purok"
+                                        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-modal-secondary" onclick="closeAddModal()">Cancel</button>
-                <button type="submit" class="btn-modal-primary">Add Resident</button>
-            </div>
-        </form>
+
+                <!-- Modal Footer -->
+                <div class="sticky bottom-0 flex flex-col-reverse gap-3 border-t-2 border-blue-100 bg-white px-6 py-4 rounded-b-2xl sm:flex-row sm:justify-end">
+                    <button 
+                        type="button" 
+                        onclick="closeAddModal()"
+                        class="w-full rounded-full border border-gray-300 bg-white px-6 py-3 text-sm font-bold text-gray-700 transition-all hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 sm:w-auto">
+                        Cancel
+                    </button>
+                    <button 
+                        type="submit"
+                        class="w-full rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:from-blue-700 hover:to-cyan-600 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto">
+                        Add Resident
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
+<script>
+// Auto-calculate age from date of birth
+document.addEventListener('DOMContentLoaded', function() {
+    const dobInput = document.getElementById('date_of_birth');
+    const ageInput = document.getElementById('age');
+    
+    if (dobInput && ageInput) {
+        dobInput.addEventListener('change', function() {
+            const dob = new Date(this.value);
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const monthDiff = today.getMonth() - dob.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+            
+            if (age >= 0 && age <= 150) {
+                ageInput.value = age;
+            }
+        });
+    }
+});
+
+// Toggle household fields
+function toggleNewHousehold(value) {
+    const fields = document.getElementById('new_household_fields');
+    if (fields) {
+        if (value === 'new') {
+            fields.classList.remove('hidden');
+        } else {
+            fields.classList.add('hidden');
+        }
+    }
+}
+</script>

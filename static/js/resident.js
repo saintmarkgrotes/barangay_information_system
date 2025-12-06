@@ -1,19 +1,41 @@
-// Residents Page Logic
+// static/js/resident.js - Fixed Modal Logic
+
 function openAddModal() {
-    ModalManager.open('addResidentModal');
+    const modal = document.getElementById('addResidentModal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+        
+        // Reset form
+        const form = document.getElementById('addResidentForm');
+        if (form) form.reset();
+        
+        // Hide household fields
+        const householdFields = document.getElementById('new_household_fields');
+        if (householdFields) {
+            householdFields.classList.add('hidden');
+        }
+    }
 }
 
 function closeAddModal() {
-    ModalManager.close('addResidentModal');
-    ModalManager.resetForm('addResidentForm');
-    toggleFieldVisibility('new_household_fields', false);
+    const modal = document.getElementById('addResidentModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = 'auto';
+    }
 }
 
 function openEditModal(residentId) {
     const resident = residents.find(r => r.id === residentId);
     if (!resident) return;
     
-    // Populate basic fields
+    const modal = document.getElementById('editResidentModal');
+    if (!modal) return;
+    
+    // Populate form fields
     const fields = [
         'last_name', 'first_name', 'middle_name', 'gender', 
         'date_of_birth', 'purok', 'age', 'place_of_birth',
@@ -35,27 +57,127 @@ function openEditModal(residentId) {
     }
     
     // Set form action
-    document.getElementById('editResidentForm').action = `/edit_resident/${residentId}`;
+    const form = document.getElementById('editResidentForm');
+    if (form) {
+        form.action = `/edit_resident/${residentId}`;
+    }
     
-    ModalManager.open('editResidentModal');
+    // Show modal
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
 }
 
 function closeEditModal() {
-    ModalManager.close('editResidentModal');
-    toggleFieldVisibility('edit_new_household_fields', false);
+    const modal = document.getElementById('editResidentModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = 'auto';
+        
+        // Hide household fields
+        const householdFields = document.getElementById('edit_new_household_fields');
+        if (householdFields) {
+            householdFields.classList.add('hidden');
+        }
+    }
 }
 
 function toggleNewHousehold(value) {
-    toggleFieldVisibility('new_household_fields', value === 'new');
+    const fields = document.getElementById('new_household_fields');
+    if (fields) {
+        if (value === 'new') {
+            fields.classList.remove('hidden');
+        } else {
+            fields.classList.add('hidden');
+        }
+    }
 }
 
 function toggleEditNewHousehold(value) {
-    toggleFieldVisibility('edit_new_household_fields', value === 'new');
+    const fields = document.getElementById('edit_new_household_fields');
+    if (fields) {
+        if (value === 'new') {
+            fields.classList.remove('hidden');
+        } else {
+            fields.classList.add('hidden');
+        }
+    }
 }
 
-// Initialize modal click outside and escape key handlers
+// Initialize modal functionality
 document.addEventListener('DOMContentLoaded', function() {
-    ModalManager.setupClickOutside('addResidentModal');
-    ModalManager.setupClickOutside('editResidentModal');
-    ModalManager.setupEscapeKey(['addResidentModal', 'editResidentModal']);
+    // Close modals when clicking outside
+    const addModal = document.getElementById('addResidentModal');
+    const editModal = document.getElementById('editResidentModal');
+    
+    if (addModal) {
+        addModal.addEventListener('click', function(e) {
+            if (e.target === this) closeAddModal();
+        });
+    }
+    
+    if (editModal) {
+        editModal.addEventListener('click', function(e) {
+            if (e.target === this) closeEditModal();
+        });
+    }
+    
+    // Close modals with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeAddModal();
+            closeEditModal();
+        }
+    });
+    
+    // Auto-calculate age from date of birth
+    const dobInput = document.getElementById('date_of_birth');
+    const ageInput = document.getElementById('age');
+    
+    if (dobInput && ageInput) {
+        dobInput.addEventListener('change', function() {
+            const dob = new Date(this.value);
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const monthDiff = today.getMonth() - dob.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+            
+            if (age >= 0 && age <= 150) {
+                ageInput.value = age;
+            } else if (age < 0) {
+                alert('Date of birth cannot be in the future');
+                dobInput.value = '';
+                ageInput.value = '';
+            }
+        });
+    }
+    
+    // Same for edit modal
+    const editDobInput = document.getElementById('edit_date_of_birth');
+    const editAgeInput = document.getElementById('edit_age');
+    
+    if (editDobInput && editAgeInput) {
+        editDobInput.addEventListener('change', function() {
+            const dob = new Date(this.value);
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const monthDiff = today.getMonth() - dob.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+            
+            if (age >= 0 && age <= 150) {
+                editAgeInput.value = age;
+            } else if (age < 0) {
+                alert('Date of birth cannot be in the future');
+                editDobInput.value = '';
+                editAgeInput.value = '';
+            }
+        });
+    }
 });

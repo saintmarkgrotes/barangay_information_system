@@ -3,43 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom CSS (for backward compatibility) -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'blue-primary': '#0072ff',
+                        'blue-secondary': '#00c6ff',
+                        'blue-dark': '#0052cc',
+                        'cyan-light': '#0099cc',
+                    }
+                }
+            }
+        }
+    </script>
+    
     {% block head %}{% endblock %}
 </head>
-<body>
+<body class="bg-cover bg-center bg-no-repeat bg-fixed" style="background-image: url('{{ url_for('static', filename='images/bg.png') }}');">
     {% block body %}
     <!-- Mobile Menu Toggle -->
-    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
-        <span></span>
-        <span></span>
-        <span></span>
+    <button 
+        id="mobileMenuToggle" 
+        class="fixed top-5 left-5 z-[1001] flex h-11 w-11 flex-col items-center justify-center gap-[5px] rounded-lg bg-gradient-to-br from-blue-600 to-blue-800 shadow-lg transition-all hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 lg:hidden"
+        aria-label="Toggle menu">
+        <span class="h-0.5 w-[22px] rounded-full bg-white transition-all duration-300"></span>
+        <span class="h-0.5 w-[22px] rounded-full bg-white transition-all duration-300"></span>
+        <span class="h-0.5 w-[22px] rounded-full bg-white transition-all duration-300"></span>
     </button>
 
-    <!-- Overlay for mobile menu -->
-    <div class="mobile-overlay" id="mobileOverlay"></div>
+    <!-- Mobile Overlay -->
+    <div 
+        id="mobileOverlay" 
+        class="fixed inset-0 z-[999] hidden bg-black/50 backdrop-blur-sm transition-opacity duration-300">
+    </div>
 
-    <div class="dashboard-flex-root">   
-        <nav class="sidebar-nav" id="sidebarNav">
-            <div class="sidebar-brand">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+    <div class="flex min-h-screen">   
+        <!-- Sidebar Navigation -->
+        <nav 
+            id="sidebarNav" 
+            class="fixed left-0 top-0 z-[1000] h-screen w-64 overflow-y-auto bg-gradient-to-b from-blue-600 to-blue-800 shadow-2xl transition-transform duration-300 -translate-x-full lg:translate-x-0">
+            
+            <!-- Logo -->
+            <div class="flex h-32 items-center justify-center p-5">
+                <img 
+                    src="{{ url_for('static', filename='images/logo.png') }}" 
+                    alt="Logo" 
+                    class="h-20 w-20 rounded-lg shadow-lg">
             </div>
-            <ul class="sidebar-list">
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="{{ url_for('main.dashboard') }}">
-                        <span class="link-icon">📊</span>
-                        <span class="link-text">Dashboard</span>
+            
+            <!-- Navigation Links -->
+            <ul class="list-none p-0 m-0">
+                <li class="border-b border-white/10">
+                    <a 
+                        href="{{ url_for('main.dashboard') }}" 
+                        class="flex items-center gap-3 px-5 py-4 text-white font-medium transition-all hover:bg-white/10 hover:pl-6">
+                        <span class="text-xl">📊</span>
+                        <span>Dashboard</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="{{ url_for('residents.list_residents') }}">
-                        <span class="link-icon">👥</span>
-                        <span class="link-text">Resident Section</span>
+                <li class="border-b border-white/10">
+                    <a 
+                        href="{{ url_for('residents.list_residents') }}" 
+                        class="flex items-center gap-3 px-5 py-4 text-white font-medium transition-all hover:bg-white/10 hover:pl-6">
+                        <span class="text-xl">👥</span>
+                        <span>Resident Section</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="{{ url_for('residents.pending_residents') }}">
-                        <span class="link-icon">⏳</span>
-                        <span class="link-text">
+                <li class="border-b border-white/10">
+                    <a 
+                        href="{{ url_for('residents.pending_residents') }}" 
+                        class="flex items-center gap-3 px-5 py-4 text-white font-medium transition-all hover:bg-white/10 hover:pl-6">
+                        <span class="text-xl">⏳</span>
+                        <span>
                             {% if current_user.role == 'admin' %}
                                 Pending Approvals
                             {% else %}
@@ -48,59 +92,104 @@
                         </span>
                     </a>
                 </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="{{ url_for('officials.list_officials') }}">
-                        <span class="link-icon">👔</span>
-                        <span class="link-text">Elected Officials</span>
+                <li class="border-b border-white/10">
+                    <a 
+                        href="{{ url_for('officials.list_officials') }}" 
+                        class="flex items-center gap-3 px-5 py-4 text-white font-medium transition-all hover:bg-white/10 hover:pl-6">
+                        <span class="text-xl">👔</span>
+                        <span>Elected Officials</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="{{ url_for('households.list_households') }}">
-                        <span class="link-icon">🏠</span>
-                        <span class="link-text">Household List</span>
+                <li class="border-b border-white/10">
+                    <a 
+                        href="{{ url_for('households.list_households') }}" 
+                        class="flex items-center gap-3 px-5 py-4 text-white font-medium transition-all hover:bg-white/10 hover:pl-6">
+                        <span class="text-xl">🏠</span>
+                        <span>Household List</span>
                     </a>
                 </li>
                 {% if current_user.role == 'admin' %}
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="{{ url_for('settings.system_settings') }}">
-                        <span class="link-icon">⚙️</span>
-                        <span class="link-text">System Settings</span>
+                <li class="border-b border-white/10">
+                    <a 
+                        href="{{ url_for('settings.system_settings') }}" 
+                        class="flex items-center gap-3 px-5 py-4 text-white font-medium transition-all hover:bg-white/10 hover:pl-6">
+                        <span class="text-xl">⚙️</span>
+                        <span>System Settings</span>
                     </a>
                 </li>
                 {% endif %}
             </ul>
-            <div class="sidebar-logout">
-                <a class="logout-btn" href="{{ url_for('auth.logout') }}">
-                    <span class="link-icon">🚪</span>
-                    <span class="link-text">Logout</span>
+            
+            <!-- Logout -->
+            <div class="absolute bottom-6 left-0 right-0 px-5">
+                <a 
+                    href="{{ url_for('auth.logout') }}" 
+                    class="flex items-center gap-3 rounded-lg bg-white/10 px-5 py-3 text-white font-medium transition-all hover:bg-white/20">
+                    <span class="text-xl">🚪</span>
+                    <span>Logout</span>
                 </a>
             </div>
         </nav>
     {% endblock %}
 
-    {% block content %}{% endblock %}
+    <!-- Main Content Area -->
+    <div class="flex-1 lg:ml-64">
+        {% block content %}{% endblock %}
+    </div>
+    </div>
     
     <script>
-        // Mobile menu toggle
+        // Mobile menu toggle with improved animation
         const mobileMenuToggle = document.getElementById('mobileMenuToggle');
         const sidebarNav = document.getElementById('sidebarNav');
         const mobileOverlay = document.getElementById('mobileOverlay');
         
-        if (mobileMenuToggle) {
-            mobileMenuToggle.addEventListener('click', function() {
-                this.classList.toggle('active');
-                sidebarNav.classList.toggle('active');
-                mobileOverlay.classList.toggle('active');
-                document.body.classList.toggle('menu-open');
-            });
+        function toggleMenu() {
+            const isOpen = !sidebarNav.classList.contains('-translate-x-full');
             
-            mobileOverlay.addEventListener('click', function() {
+            if (isOpen) {
+                // Close menu
+                sidebarNav.classList.add('-translate-x-full');
+                mobileOverlay.classList.add('hidden');
                 mobileMenuToggle.classList.remove('active');
-                sidebarNav.classList.remove('active');
-                this.classList.remove('active');
-                document.body.classList.remove('menu-open');
-            });
+                document.body.classList.remove('overflow-hidden');
+            } else {
+                // Open menu
+                sidebarNav.classList.remove('-translate-x-full');
+                mobileOverlay.classList.remove('hidden');
+                mobileMenuToggle.classList.add('active');
+                document.body.classList.add('overflow-hidden', 'lg:overflow-auto');
+            }
+            
+            // Animate hamburger icon
+            const spans = mobileMenuToggle.querySelectorAll('span');
+            if (!isOpen) {
+                spans[0].style.transform = 'rotate(45deg) translate(6px, 6px)';
+                spans[1].style.opacity = '0';
+                spans[2].style.transform = 'rotate(-45deg) translate(6px, -6px)';
+            } else {
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+            }
         }
+        
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', toggleMenu);
+        }
+        
+        if (mobileOverlay) {
+            mobileOverlay.addEventListener('click', toggleMenu);
+        }
+        
+        // Close menu on window resize to desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 1024) {
+                sidebarNav.classList.remove('-translate-x-full');
+                mobileOverlay.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }
+        });
     </script>
 </body>
 </html>

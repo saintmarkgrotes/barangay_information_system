@@ -1,52 +1,133 @@
-{%extends "base.html" %}
+{% extends "base.html" %}
 
 {% block head %}
     <title>Household {{ household.household_no }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/household_detail.css') }}">
-</head>
-<body>
-    <header class="page-header">
-        <div class="container">
-            <h1 class="title">Household No.
-                <span class="pill">{{ household.household_no }}</span>
-            </h1>
+{% endblock %}
+
+{% block content %}
+    <div class="w-full min-h-screen px-4 py-20 sm:px-6 lg:px-8 lg:py-10">
+        <div class="mx-auto max-w-6xl">
+            <!-- Back Button - Responsive -->
+            <a 
+                href="{{ url_for('households.list_households') }}" 
+                class="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-gray-600 transition-colors hover:text-blue-600 sm:mb-6 sm:text-base">
+                <span>←</span> Back to Household List
+            </a>
+
+            <!-- Page Header - Responsive -->
+            <div class="mb-6 flex flex-col items-start gap-3 sm:mb-8 sm:flex-row sm:items-center sm:gap-4">
+                <h1 class="text-2xl font-bold text-blue-600 sm:text-3xl lg:text-4xl">
+                    Household No.
+                </h1>
+                <span class="inline-block rounded-full bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-2 text-xl font-bold text-white shadow-lg sm:px-8 sm:py-3 sm:text-2xl lg:text-3xl">
+                    {{ household.household_no }}
+                </span>
+            </div>
+
+            <!-- Household Information Card - Responsive -->
+            <div class="mb-8 overflow-hidden rounded-2xl border border-blue-200 bg-white shadow-lg">
+                <div class="bg-gradient-to-r from-blue-50 to-cyan-50 px-5 py-4 sm:px-6">
+                    <h2 class="text-lg font-bold text-gray-800 sm:text-xl">
+                        Household Information
+                    </h2>
+                </div>
+                
+                <div class="p-5 sm:p-6">
+                    <!-- Two-column grid on larger screens, single column on mobile -->
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-6">
+                        <!-- Left Column -->
+                        <div class="space-y-3">
+                            <div class="flex flex-col sm:flex-row sm:gap-2">
+                                <span class="font-semibold text-gray-700 sm:min-w-[140px]">Region:</span>
+                                <span class="text-gray-600">{{ household.region or '—' }}</span>
+                            </div>
+                            <div class="flex flex-col sm:flex-row sm:gap-2">
+                                <span class="font-semibold text-gray-700 sm:min-w-[140px]">Province:</span>
+                                <span class="text-gray-600">{{ household.province or '—' }}</span>
+                            </div>
+                            <div class="flex flex-col sm:flex-row sm:gap-2">
+                                <span class="font-semibold text-gray-700 sm:min-w-[140px]">City/Municipality:</span>
+                                <span class="text-gray-600">{{ household.city_municipality or '—' }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Right Column -->
+                        <div class="space-y-3">
+                            <div class="flex flex-col sm:flex-row sm:gap-2">
+                                <span class="font-semibold text-gray-700 sm:min-w-[140px]">Barangay:</span>
+                                <span class="text-gray-600">{{ household.barangay or '—' }}</span>
+                            </div>
+                            <div class="flex flex-col sm:flex-row sm:gap-2">
+                                <span class="font-semibold text-gray-700 sm:min-w-[140px]">Purok:</span>
+                                <span class="text-gray-600">{{ household.purok or '—' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <hr class="my-6 border-t-2 border-blue-100 sm:my-8">
+
+            <!-- Family Members Section -->
+            <div class="mb-6">
+                <h2 class="mb-4 flex items-center gap-2 text-xl font-bold text-gray-800 sm:mb-6 sm:text-2xl">
+                    <span>|</span>
+                    <span>Family Members</span>
+                </h2>
+
+                <!-- Members List - Responsive -->
+                <div class="space-y-3">
+                    {% for m in members %}
+                    <article class="overflow-hidden rounded-2xl bg-white shadow-md transition-all hover:shadow-lg">
+                        <!-- Mobile Layout (< 640px) -->
+                        <div class="flex flex-col gap-3 p-4 sm:hidden">
+                            <div class="flex items-center gap-3">
+                                <div class="h-12 w-12 flex-shrink-0 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 shadow-inner"></div>
+                                <div class="min-w-0 flex-1">
+                                    <a 
+                                        href="{{ url_for('residents.resident_info', id=m.id) }}" 
+                                        class="block truncate font-bold text-blue-700 hover:text-blue-900">
+                                        {{ m.last_name }}, {{ m.first_name }}{% if m.middle_name %} {{ m.middle_name[0] }}.{% endif %}
+                                    </a>
+                                </div>
+                            </div>
+                            <a 
+                                href="{{ url_for('residents.resident_info', id=m.id) }}" 
+                                class="block w-full rounded-full bg-blue-100 py-2 text-center text-sm font-bold text-blue-700 transition-colors hover:bg-blue-200">
+                                See Info
+                            </a>
+                        </div>
+
+                        <!-- Tablet & Desktop Layout (≥ 640px) -->
+                        <div class="hidden items-center gap-4 p-5 sm:flex">
+                            <div class="h-14 w-14 flex-shrink-0 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 shadow-inner"></div>
+                            
+                            <div class="flex-1">
+                                <a 
+                                    href="{{ url_for('residents.resident_info', id=m.id) }}" 
+                                    class="text-lg font-bold text-blue-700 transition-colors hover:text-blue-900 hover:underline">
+                                    {{ m.last_name }}, {{ m.first_name }}{% if m.middle_name %} {{ m.middle_name[0] }}.{% endif %}
+                                </a>
+                            </div>
+                            
+                            <a 
+                                href="{{ url_for('residents.resident_info', id=m.id) }}" 
+                                class="rounded-full border-2 border-blue-200 bg-white px-5 py-2 text-sm font-bold text-blue-700 shadow-sm transition-all hover:border-blue-300 hover:bg-blue-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                See Info
+                            </a>
+                        </div>
+                    </article>
+                    {% else %}
+                    <!-- Empty State -->
+                    <div class="flex flex-col items-center justify-center rounded-2xl bg-white p-12 text-center shadow-md">
+                        <div class="mb-4 text-5xl opacity-30">👥</div>
+                        <p class="text-lg font-semibold text-gray-700">No members found</p>
+                        <p class="text-sm text-gray-500">This household has no registered members yet.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
-    </header>
-
-    <main class="container main-content">
-        <section class="info-card">
-            <div class="info-left">
-                <div class="row"><span class="label">Region:</span> <strong>{{ household.region or '—' }}</strong></div>
-                <div class="row"><span class="label">Province:</span> <strong>{{ household.province or '—' }}</strong></div>
-                <div class="row"><span class="label">City/Municipality:</span> <strong>{{ household.city_municipality or '—' }}</strong></div>
-            </div>
-            <div class="info-right">
-                <div class="row"><span class="label">Barangay:</span> <strong>{{ household.barangay or '—' }}</strong></div>
-                <div class="row"><span class="label">Purok:</span> <strong>{{ household.purok or '—' }}</strong></div>
-            </div>
-        </section>
-
-        <hr class="divider">
-
-        <section class="members-section">
-            <h2 class="section-title">| Family Member</h2>
-
-            <div class="members-list">
-                {% for m in members %}
-                <article class="member-card">
-                    <div class="avatar" aria-hidden="true"></div>
-                    <div class="member-name">
-                        <a href="{{ url_for('residents.resident_info', id=m.id) }}" class="name-link">{{ m.last_name }}, {{ m.first_name }}{% if m.middle_name %} {{ m.middle_name[0] }}.{% endif %}</a>
-                    </div>
-                    <div class="member-action">
-                        <a class="btn-info" href="{{ url_for('residents.resident_info', id=m.id) }}">See Info</a>
-                    </div>
-                </article>
-                {% else %}
-                <p>No members found.</p>
-                {% endfor %}
-            </div>
-        </section>
-    </main>
-</body>
+    </div>
 {% endblock %}

@@ -2,45 +2,107 @@
 
 {% block head %}
     <title>Household List - Barangay Information System</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/household_list.css') }}">
 {% endblock %}
 
 {% block content %}
-    <div class="household-page">
-        <div class="page-header">
-            <h1 class="page-title">Household List</h1>
-        </div>
+    <div class="w-full min-h-screen px-4 py-20 sm:px-6 lg:px-8 lg:py-10">
+        <div class="mx-auto max-w-7xl">
+            <!-- Page Title -->
+            <h1 class="mb-6 text-3xl font-bold text-blue-600 sm:mb-8 sm:text-4xl lg:text-5xl">
+                Household List
+            </h1>
 
-        <div class="zone-header">
-            <h2 class="zone-title">Zone/Purok</h2>
-            <select class="zone-select" id="purokFilter" onchange="filterHouseholds()">
-                <option value="">Select Purok</option>
-                <option value="all">All Puroks</option>
-            </select>
-        </div>
-        
-        {% if households %}
-            <div class="household-grid" id="householdGrid">
+            <!-- Filter Section - Responsive -->
+            <div class="mb-6 overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 to-blue-700 p-5 shadow-lg sm:p-6">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <h2 class="text-xl font-bold text-white sm:text-2xl">
+                        Zone/Purok
+                    </h2>
+                    <select 
+                        id="purokFilter" 
+                        onchange="filterHouseholds()"
+                        class="w-full rounded-full border-0 bg-white px-5 py-3 text-sm font-medium text-gray-800 shadow-md transition-all focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto sm:min-w-[220px]">
+                        <option value="">Select Purok</option>
+                        <option value="all">All Puroks</option>
+                        <!-- Dynamic options can be added here -->
+                    </select>
+                </div>
+            </div>
+            
+            {% if households %}
+            <!-- Households Grid - Fully Responsive -->
+            <div id="householdGrid" class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {% for h in households %}
-                    <div class="household-card" data-purok="{{ h.purok or '' }}">
-                        <div class="household-info">
-                            <div class="household-label">Household No.</div>
-                            <div class="household-number">{{ h.household_no }}</div>
+                <div 
+                    class="household-card transform overflow-hidden rounded-2xl bg-white shadow-md transition-all hover:-translate-y-1 hover:shadow-lg" 
+                    data-purok="{{ h.purok or '' }}">
+                    
+                    <!-- Card Content -->
+                    <div class="p-5">
+                        <!-- Label -->
+                        <div class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-600">
+                            Household No.
                         </div>
-                        <a href="{{ url_for('households.household_detail', id=h.id) }}" 
-                           class="btn-see-more">
+                        
+                        <!-- Household Number -->
+                        <div class="mb-4 text-2xl font-bold tracking-wide text-blue-600 sm:text-3xl">
+                            {{ h.household_no }}
+                        </div>
+                        
+                        <!-- Additional Info (if available) -->
+                        {% if h.purok or h.barangay %}
+                        <div class="mb-3 space-y-1 text-sm text-gray-600">
+                            {% if h.purok %}
+                            <div>📍 Purok: {{ h.purok }}</div>
+                            {% endif %}
+                            {% if h.barangay %}
+                            <div>🏘️ {{ h.barangay }}</div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        
+                        <!-- See More Button -->
+                        <a 
+                            href="{{ url_for('households.household_detail', id=h.id) }}" 
+                            class="block w-full rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 py-3 text-center text-sm font-bold text-white shadow-md transition-all hover:from-blue-700 hover:to-cyan-600 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-300">
                             See More
                         </a>
                     </div>
+                </div>
                 {% endfor %}
             </div>
-        {% else %}
-            <div class="empty-state">
-                <div class="empty-state-icon">🏠</div>
-                <p class="empty-title">No Households Found</p>
-                <p class="empty-subtitle">There are currently no households registered in the system.</p>
+
+            <!-- Pagination - Responsive -->
+            <div class="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
+                <p class="text-sm text-gray-600">
+                    Showing {{ households|length }} household(s)
+                </p>
+                <div class="flex gap-2">
+                    <button class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Previous
+                    </button>
+                    <button class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        1
+                    </button>
+                    <button class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Next
+                    </button>
+                </div>
             </div>
-        {% endif %}
+            
+            {% else %}
+            <!-- Empty State - Responsive -->
+            <div class="flex flex-col items-center justify-center rounded-2xl bg-white p-12 text-center shadow-lg sm:p-16">
+                <div class="mb-4 text-6xl opacity-30 sm:text-7xl">🏠</div>
+                <p class="mb-2 text-xl font-semibold text-gray-800 sm:text-2xl">
+                    No Households Found
+                </p>
+                <p class="text-sm text-gray-600 sm:text-base">
+                    There are currently no households registered in the system.
+                </p>
+            </div>
+            {% endif %}
+        </div>
     </div>
 
     <script>
@@ -50,12 +112,40 @@
             
             cards.forEach(card => {
                 const purok = card.getAttribute('data-purok').toLowerCase();
+                
                 if (filter === 'all' || filter === '' || purok.includes(filter)) {
-                    card.style.display = 'flex';
+                    card.style.display = 'block';
+                    // Fade in animation
+                    card.style.opacity = '0';
+                    setTimeout(() => {
+                        card.style.transition = 'opacity 0.3s ease';
+                        card.style.opacity = '1';
+                    }, 10);
                 } else {
                     card.style.display = 'none';
                 }
             });
         }
+
+        // Populate purok options dynamically
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.household-card');
+            const puroks = new Set();
+            
+            cards.forEach(card => {
+                const purok = card.getAttribute('data-purok');
+                if (purok && purok.trim() !== '') {
+                    puroks.add(purok);
+                }
+            });
+            
+            const select = document.getElementById('purokFilter');
+            puroks.forEach(purok => {
+                const option = document.createElement('option');
+                option.value = purok;
+                option.textContent = purok;
+                select.appendChild(option);
+            });
+        });
     </script>
 {% endblock %}
