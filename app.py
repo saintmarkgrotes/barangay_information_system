@@ -15,6 +15,7 @@ from routes.officials import officials_bp
 from routes.households import households_bp
 from routes.settings import settings_bp, bcrypt as settings_bcrypt
 from routes.certificates import certificates_bp
+from routes.realtime import realtime_bp  # NEW
 
 
 def create_app(config_name='default'):
@@ -60,6 +61,7 @@ def create_app(config_name='default'):
     app.register_blueprint(households_bp)
     app.register_blueprint(settings_bp)
     app.register_blueprint(certificates_bp)
+    app.register_blueprint(realtime_bp)  # NEW
     
     # Error handlers
     @app.errorhandler(404)
