@@ -134,10 +134,9 @@ class CertificateRequest(db.Model):
     certificate_type = db.Column(db.String(100), nullable=False)
     purpose = db.Column(db.Text, nullable=False)
     
-    # Request tracking
-    status = db.Column(db.String(20), default='pending')  # pending, approved, rejected, ready
-    requested_by_user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
-    requested_by_admin = db.Column(db.Integer, db.ForeignKey('admin.id'), nullable=True)
+    # Request tracking - SIMPLIFIED
+    status = db.Column(db.String(20), default='pending')
+    requested_by = db.Column(db.Integer, db.ForeignKey('admin.id'), nullable=False)  # Changed this
     requested_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     
     # Admin action tracking
@@ -151,8 +150,7 @@ class CertificateRequest(db.Model):
     
     # Relationships
     resident = db.relationship('Resident', backref='certificate_requests', foreign_keys=[resident_id])
-    user_requester = db.relationship('User', foreign_keys=[requested_by_user], backref='user_certificate_requests')
-    admin_requester = db.relationship('Admin', foreign_keys=[requested_by_admin], backref='admin_certificate_requests')
+    requester = db.relationship('Admin', foreign_keys=[requested_by], backref='certificate_requests_made')
     reviewer = db.relationship('Admin', foreign_keys=[reviewed_by], backref='certificate_requests_reviewed')
 
 
