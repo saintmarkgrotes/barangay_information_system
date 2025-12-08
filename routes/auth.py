@@ -80,92 +80,86 @@ def register():
             return render_template('register.html')
         
         # FIXED: Verify that the person exists in the Resident database
-        # Parse the full name - try multiple patterns
-        name_parts = [part.strip() for part in full_name.strip().split() if part.strip()]
+        # Normalize the full name for comparison
+        full_name_lower = full_name.lower().strip()
+        
+        # Split name into parts and clean them
+        name_parts = [part.strip() for part in full_name_lower.split() if part.strip()]
         
         if len(name_parts) < 2:
             flash('Please enter your full name (at least first and last name).', 'warning')
             return render_template('register.html')
         
-        # Try to find matching resident with case-insensitive search
+        # Search for matching resident
         resident = None
         
-        # Pattern 1: First Last
-        if len(name_parts) == 2:
-            first_name = name_parts[0]
-            last_name = name_parts[1]
-            resident = Resident.query.filter(
-                db.func.lower(Resident.first_name) == first_name.lower(),
-                db.func.lower(Resident.last_name) == last_name.lower()
-            ).first()
+        # Get all residents and check each one
+        all_residents = Resident.query.all()
         
-        # Pattern 2: First Middle Last
-        if not resident and len(name_parts) >= 3:
-            first_name = name_parts[0]
-            middle_name = name_parts[1]
-            last_name = ' '.join(name_parts[2:])  # Handle multi-part last names
+        for r in all_residents:
+            # Build variations of the resident's full name
+            resident_names = []
             
-            resident = Resident.query.filter(
-                db.func.lower(Resident.first_name) == first_name.lower(),
-                db.func.lower(Resident.middle_name) == middle_name.lower(),
-                db.func.lower(Resident.last_name) == last_name.lower()
-            ).first()
-        
-        # Pattern 3: First LastName (with middle name in database)
-        if not resident and len(name_parts) >= 2:
-            first_name = name_parts[0]
-            last_name = ' '.join(name_parts[1:])
+            # Normalize resident data
+            first = r.first_name.lower().strip() if r.first_name else ""
+            middle = r.middle_name.lower().strip() if r.middle_name else ""
+            last = r.last_name.lower().strip() if r.last_name else ""
             
-            resident = Resident.query.filter(
-                db.func.lower(Resident.first_name) == first_name.lower(),
-                db.func.lower(Resident.last_name) == last_name.lower()
-            ).first()
-        
-        # Pattern 4: Try matching with any name order
-        if not resident:
-            # Try searching by individual name parts
-            for i in range(len(name_parts)):
-                for j in range(i+1, len(name_parts)):
-                    first = name_parts[i]
-                    last = name_parts[j]
-                    
-                    resident = Resident.query.filter(
-                        db.or_(
-                            db.and_(
-                                db.func.lower(Resident.first_name) == first.lower(),
-                                db.func.lower(Resident.last_name) == last.lower()
-                            ),
-                            db.and_(
-                                db.func.lower(Resident.first_name) == last.lower(),
-                                db.func.lower(Resident.last_name) == first.lower()
-                            )
-                        )
-                    ).first()
-                    
-                    if resident:
-                        break
-                if resident:
+            # Generate possible name combinations
+            if first and last:
+                resident_names.append(f"{first} {last}")  # First Last
+            
+            if first and middle and last:
+                resident_names.append(f"{first} {middle} {last}")  # First Middle Last
+                resident_names.append(f"{first} {middle[0]} {last}")  # First M. Last (initial)
+                resident_names.append(f"{first} {middle[0]}. {last}")  # First M. Last (with period)
+            
+            if last and first:
+                resident_names.append(f"{last} {first}")  # Last First (reversed)
+            
+            if last and first and middle:
+                resident_names.append(f"{last} {first} {middle}")  # Last First Middle
+            
+            # Check if any combination matches the input
+            input_name = " ".join(name_parts)
+            
+            for resident_name in resident_names:
+                if input_name == resident_name:
+                    resident = r
                     break
+            
+            if resident:
+                break
         
         # If resident not found in database, deny registration
         if not resident:
             flash(
                 'Your name was not found in our resident records. '
-                'Please make sure you enter your name exactly as registered (First Middle Last), '
+                'Please make sure you enter your name exactly as registered '
+                '(e.g., "Juan Dela Cruz" or "Juan M Dela Cruz"), '
                 'or contact the barangay office for assistance.',
                 'danger'
             )
             return render_template('register.html')
         
         # Check if this resident already has an account
-        existing_resident_account = Admin.query.filter_by(
-            role='resident',
-            full_name=full_name
+        # Check both by full_name match and by constructing the resident's full name
+        resident_full_name_variations = [
+            f"{resident.first_name} {resident.middle_name} {resident.last_name}".strip(),
+            f"{resident.first_name} {resident.last_name}".strip(),
+        ]
+        
+        existing_resident_account = Admin.query.filter(
+            Admin.role == 'resident',
+            db.or_(
+                Admin.full_name == full_name,
+                Admin.full_name.in_(resident_full_name_variations)
+            )
         ).first()
         
         if existing_resident_account:
             flash(
-                'An account with this name already exists. '
+                'An account for this resident already exists. '
                 'If you forgot your password, please contact the barangay office.',
                 'danger'
             )
