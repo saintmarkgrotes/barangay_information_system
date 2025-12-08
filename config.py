@@ -4,6 +4,8 @@ import os
 class Config:
     """Base configuration"""
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'your_secret_key_here'
+    WTF_CSRF_ENABLED = True  # Add this
+    WTF_CSRF_TIME_LIMIT = None  # Add this
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///barangay.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SESSION_COOKIE_HTTPONLY = True

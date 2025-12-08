@@ -14,8 +14,7 @@ function toggleStats() {
 
 // Calendar state
 let currentDate = new Date();
-let selectedDate = null;
-let events = {}; // Store events by date string like "2025-10-15"
+
 
 function renderCalendar() {
     const monthYear = document.getElementById('calendarMonthYear');

@@ -2,7 +2,9 @@ from flask import Flask, render_template
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 import os
+from flask_wtf import CSRFProtect
 
+csrf = CSRFProtect()
 # Import models and configuration
 from models import db, Admin, User
 from config import config
@@ -23,6 +25,8 @@ def create_app(config_name='default'):
     
     # Load configuration
     app.config.from_object(config[config_name])
+
+    csrf = CSRFProtect(app)
     
     # Ensure upload directory exists
     upload_dir = os.path.join(app.static_folder, 'uploads', 'elected_officials')

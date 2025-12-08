@@ -142,6 +142,14 @@ def request_certificate():
             requested_by=current_user.id
         )
         
+        if current_user.role == 'resident':
+            # Verify the resident_id belongs to current user if provided
+            if resident_id and resident_id != 'none':
+                resident = Resident.query.get(int(resident_id))
+                if not resident:
+                    flash('Invalid resident selection.', 'danger')
+                    return redirect(url_for('certificates.request_certificate'))
+        
         db.session.add(cert_request)
         db.session.commit()
         
@@ -176,7 +184,11 @@ def request_certificate():
 @login_required
 def view_certificate(id):
     """View certificate details"""
-    cert = CertificateRequest.query.get_or_404(id)
+    from sqlalchemy.orm import joinedload
+    requests = CertificateRequest.query.options(
+        joinedload(CertificateRequest.requester),
+        joinedload(CertificateRequest.reviewer)
+    ).order_by(...)
     
     # Security check - users can only view their own
     if current_user.role != 'admin' and cert.requested_by != current_user.id:

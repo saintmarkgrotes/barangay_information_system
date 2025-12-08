@@ -15,6 +15,6 @@ __all__ = [
     'residents_bp',
     'officials_bp',
     'households_bp',
-    'settings_bp'
+    'settings_bp',
     'certificates_bp'
 ]
