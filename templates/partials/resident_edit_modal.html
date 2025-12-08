@@ -1,20 +1,20 @@
-<!-- templates/partials/resident_add_modal.html - FIXED VERSION -->
-<div id="addResidentModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/50 backdrop-blur-sm">
+<!-- templates/partials/resident_edit_modal.html - FIXED VERSION -->
+<div id="editResidentModal" class="fixed inset-0 z-[9999] hidden overflow-y-auto bg-black/50 backdrop-blur-sm">
     <div class="flex min-h-full items-center justify-center p-4">
         <div class="relative w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
             <!-- Modal Header -->
             <div class="sticky top-0 z-10 flex items-center justify-between border-b-2 border-blue-100 bg-white px-6 py-5 rounded-t-2xl">
-                <h2 class="text-2xl font-bold text-blue-600">Add New Resident</h2>
+                <h2 class="text-2xl font-bold text-blue-600">Edit Resident</h2>
                 <button 
                     type="button" 
-                    onclick="closeAddModal()" 
+                    onclick="closeEditModal()" 
                     class="flex h-10 w-10 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                     <span class="text-3xl leading-none">&times;</span>
                 </button>
             </div>
 
             <!-- Modal Body -->
-            <form method="POST" action="{{ url_for('residents.add_resident') }}" id="addResidentForm">
+            <form method="POST" action="" id="editResidentForm">
                 <div class="max-h-[calc(100vh-200px)] overflow-y-auto px-6 py-6">
                     <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                         <!-- Last Name -->
@@ -24,6 +24,7 @@
                             </label>
                             <input 
                                 type="text" 
+                                id="edit_last_name"
                                 name="last_name" 
                                 required
                                 class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
@@ -36,6 +37,7 @@
                             </label>
                             <input 
                                 type="text" 
+                                id="edit_first_name"
                                 name="first_name" 
                                 required
                                 class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
@@ -48,6 +50,7 @@
                             </label>
                             <input 
                                 type="text" 
+                                id="edit_middle_name"
                                 name="middle_name"
                                 class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
                         </div>
@@ -58,6 +61,7 @@
                                 Gender <span class="text-red-500">*</span>
                             </label>
                             <select 
+                                id="edit_gender"
                                 name="gender" 
                                 required
                                 class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
@@ -74,7 +78,7 @@
                             </label>
                             <input 
                                 type="date" 
-                                id="date_of_birth"
+                                id="edit_date_of_birth"
                                 name="date_of_birth"
                                 class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
                         </div>
@@ -86,7 +90,7 @@
                             </label>
                             <input 
                                 type="number" 
-                                id="age"
+                                id="edit_age"
                                 name="age" 
                                 min="0" 
                                 required
@@ -100,6 +104,7 @@
                             </label>
                             <input 
                                 type="text" 
+                                id="edit_purok"
                                 name="purok" 
                                 required
                                 class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
@@ -112,6 +117,7 @@
                             </label>
                             <input 
                                 type="text" 
+                                id="edit_place_of_birth"
                                 name="place_of_birth"
                                 class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
                         </div>
@@ -123,6 +129,7 @@
                             </label>
                             <input 
                                 type="text" 
+                                id="edit_civil_status"
                                 name="civil_status"
                                 class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
                         </div>
@@ -134,6 +141,7 @@
                             </label>
                             <input 
                                 type="text" 
+                                id="edit_citizenship"
                                 name="citizenship"
                                 class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
                         </div>
@@ -145,6 +153,7 @@
                             </label>
                             <input 
                                 type="text" 
+                                id="edit_occupation"
                                 name="occupation"
                                 class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
                         </div>
@@ -155,6 +164,7 @@
                                 Voter Status <span class="text-red-500">*</span>
                             </label>
                             <select 
+                                id="edit_voter_status"
                                 name="voter_status" 
                                 required
                                 class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
@@ -170,6 +180,7 @@
                                 Senior Citizen <span class="text-red-500">*</span>
                             </label>
                             <select 
+                                id="edit_senior_citizen"
                                 name="senior_citizen" 
                                 required
                                 class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
@@ -185,9 +196,9 @@
                                 Household
                             </label>
                             <select 
-                                id="household_select"
+                                id="edit_household_select"
                                 name="household_select" 
-                                onchange="toggleNewHousehold(this.value)"
+                                onchange="toggleEditNewHousehold(this.value)"
                                 class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
                                 <option value="none">-- No household --</option>
                                 {% for h in households %}
@@ -198,7 +209,7 @@
                         </div>
 
                         <!-- New Household Fields (Hidden by default) -->
-                        <div id="new_household_fields" class="hidden sm:col-span-2 lg:col-span-3 rounded-xl border-2 border-blue-200 bg-blue-50 p-5">
+                        <div id="edit_new_household_fields" class="hidden sm:col-span-2 lg:col-span-3 rounded-xl border-2 border-blue-200 bg-blue-50 p-5">
                             <h4 class="mb-4 text-lg font-bold text-blue-600">New Household Information</h4>
                             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                                 <div>
@@ -255,54 +266,17 @@
                 <div class="sticky bottom-0 flex flex-col-reverse gap-3 border-t-2 border-blue-100 bg-white px-6 py-4 rounded-b-2xl sm:flex-row sm:justify-end">
                     <button 
                         type="button" 
-                        onclick="closeAddModal()"
+                        onclick="closeEditModal()"
                         class="w-full rounded-full border border-gray-300 bg-white px-6 py-3 text-sm font-bold text-gray-700 transition-all hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 sm:w-auto">
                         Cancel
                     </button>
                     <button 
                         type="submit"
                         class="w-full rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:from-blue-700 hover:to-cyan-600 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto">
-                        Add Resident
+                        Save Changes
                     </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-<script>
-// Auto-calculate age from date of birth
-document.addEventListener('DOMContentLoaded', function() {
-    const dobInput = document.getElementById('date_of_birth');
-    const ageInput = document.getElementById('age');
-    
-    if (dobInput && ageInput) {
-        dobInput.addEventListener('change', function() {
-            const dob = new Date(this.value);
-            const today = new Date();
-            let age = today.getFullYear() - dob.getFullYear();
-            const monthDiff = today.getMonth() - dob.getMonth();
-            
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
-                age--;
-            }
-            
-            if (age >= 0 && age <= 150) {
-                ageInput.value = age;
-            }
-        });
-    }
-});
-
-// Toggle household fields
-function toggleNewHousehold(value) {
-    const fields = document.getElementById('new_household_fields');
-    if (fields) {
-        if (value === 'new') {
-            fields.classList.remove('hidden');
-        } else {
-            fields.classList.add('hidden');
-        }
-    }
-}
-</script>

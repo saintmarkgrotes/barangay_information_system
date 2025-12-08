@@ -17,11 +17,11 @@
                         Request and track your barangay certificates
                     </p>
                 </div>
-                <a 
-                    href="{{ url_for('certificates.request_certificate') }}"
+                <button 
+                    onclick="openCertificateModal()"
                     class="w-full rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:from-blue-700 hover:to-cyan-600 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto sm:min-w-[200px]">
                     + Request Certificate
-                </a>
+                </button>
             </div>
 
             <!-- Statistics Cards - Responsive -->
@@ -165,15 +165,18 @@
                         <div class="mb-4 text-6xl opacity-30">📄</div>
                         <p class="mb-2 text-xl font-semibold text-gray-800">No Certificate Requests Yet</p>
                         <p class="mb-4 text-sm text-gray-600">Click the button above to request your first certificate</p>
-                        <a 
-                            href="{{ url_for('certificates.request_certificate') }}"
+                        <button 
+                            onclick="openCertificateModal()"
                             class="rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:from-blue-700 hover:to-cyan-600 hover:shadow-xl">
                             Request Certificate
-                        </a>
+                        </button>
                     </div>
                     {% endfor %}
                 </div>
             </div>
         </div>
     </main>
+
+    <!-- Include Certificate Request Modal -->
+    {% include 'partials/certificate_request_modal.html' %}
 {% endblock %}

@@ -1,4 +1,4 @@
-// static/js/resident.js - Fixed Modal Logic
+// static/js/resident.js - FIXED VERSION
 
 function openAddModal() {
     const modal = document.getElementById('addResidentModal');
@@ -30,10 +30,16 @@ function closeAddModal() {
 
 function openEditModal(residentId) {
     const resident = residents.find(r => r.id === residentId);
-    if (!resident) return;
+    if (!resident) {
+        console.error('Resident not found:', residentId);
+        return;
+    }
     
     const modal = document.getElementById('editResidentModal');
-    if (!modal) return;
+    if (!modal) {
+        console.error('Edit modal not found');
+        return;
+    }
     
     // Populate form fields
     const fields = [
@@ -131,53 +137,43 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Auto-calculate age from date of birth
+    // Auto-calculate age from date of birth (Add Modal)
     const dobInput = document.getElementById('date_of_birth');
     const ageInput = document.getElementById('age');
     
     if (dobInput && ageInput) {
         dobInput.addEventListener('change', function() {
-            const dob = new Date(this.value);
-            const today = new Date();
-            let age = today.getFullYear() - dob.getFullYear();
-            const monthDiff = today.getMonth() - dob.getMonth();
-            
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
-                age--;
-            }
-            
-            if (age >= 0 && age <= 150) {
-                ageInput.value = age;
-            } else if (age < 0) {
-                alert('Date of birth cannot be in the future');
-                dobInput.value = '';
-                ageInput.value = '';
-            }
+            calculateAge(this.value, ageInput);
         });
     }
     
-    // Same for edit modal
+    // Auto-calculate age from date of birth (Edit Modal)
     const editDobInput = document.getElementById('edit_date_of_birth');
     const editAgeInput = document.getElementById('edit_age');
     
     if (editDobInput && editAgeInput) {
         editDobInput.addEventListener('change', function() {
-            const dob = new Date(this.value);
-            const today = new Date();
-            let age = today.getFullYear() - dob.getFullYear();
-            const monthDiff = today.getMonth() - dob.getMonth();
-            
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
-                age--;
-            }
-            
-            if (age >= 0 && age <= 150) {
-                editAgeInput.value = age;
-            } else if (age < 0) {
-                alert('Date of birth cannot be in the future');
-                editDobInput.value = '';
-                editAgeInput.value = '';
-            }
+            calculateAge(this.value, editAgeInput);
         });
     }
 });
+
+function calculateAge(dobValue, ageInput) {
+    if (!dobValue) return;
+    
+    const dob = new Date(dobValue);
+    const today = new Date();
+    let age = today.getFullYear() - dob.getFullYear();
+    const monthDiff = today.getMonth() - dob.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+        age--;
+    }
+    
+    if (age >= 0 && age <= 150) {
+        ageInput.value = age;
+    } else if (age < 0) {
+        alert('Date of birth cannot be in the future');
+        ageInput.value = '';
+    }
+}
