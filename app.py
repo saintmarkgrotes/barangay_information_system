@@ -4,7 +4,7 @@ from flask_bcrypt import Bcrypt
 import os
 
 # Import models and configuration
-from models import db, Admin
+from models import db, Admin, User
 from config import config
 
 # Import blueprints
@@ -42,8 +42,14 @@ def create_app(config_name='default'):
     login_manager.login_message_category = 'warning'
     
     @login_manager.user_loader
-    def load_user(admin_id):
-        return Admin.query.get(int(admin_id))
+    def load_user(user_id):
+        # Try loading as Admin first
+        user = Admin.query.get(int(user_id))
+        if user:
+            return user
+        # Try loading as User (resident)
+        user = User.query.get(int(user_id))
+        return user
     
     # Register blueprints
     app.register_blueprint(auth_bp)

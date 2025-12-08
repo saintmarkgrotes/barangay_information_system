@@ -6,11 +6,31 @@ db = SQLAlchemy()
 
 
 class Admin(db.Model, UserMixin):
-    """Admin and user accounts"""
+    """Admin, user, and resident accounts"""
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
-    role = db.Column(db.String(10), nullable=False, default='user')
+    role = db.Column(db.String(10), nullable=False, default='user')  # admin, user, resident
+    full_name = db.Column(db.String(200), nullable=True)  # For resident accounts
+    contact_number = db.Column(db.String(20), nullable=True)  # For resident accounts
+
+
+class User(db.Model, UserMixin):
+    """Regular user accounts linked to residents"""
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(150), nullable=False)
+    resident_id = db.Column(db.Integer, db.ForeignKey('resident.id'), nullable=False, unique=True)
+    email = db.Column(db.String(150), nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    is_active = db.Column(db.Boolean, default=True)
+    
+    # Relationship
+    resident = db.relationship('Resident', backref='user_account', uselist=False)
+    
+    @property
+    def role(self):
+        return 'resident'
 
 
 class Household(db.Model):
@@ -116,7 +136,8 @@ class CertificateRequest(db.Model):
     
     # Request tracking
     status = db.Column(db.String(20), default='pending')  # pending, approved, rejected, ready
-    requested_by = db.Column(db.Integer, db.ForeignKey('admin.id'), nullable=False)
+    requested_by_user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    requested_by_admin = db.Column(db.Integer, db.ForeignKey('admin.id'), nullable=True)
     requested_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     
     # Admin action tracking
@@ -130,7 +151,8 @@ class CertificateRequest(db.Model):
     
     # Relationships
     resident = db.relationship('Resident', backref='certificate_requests', foreign_keys=[resident_id])
-    requester = db.relationship('Admin', foreign_keys=[requested_by], backref='certificate_requests_made')
+    user_requester = db.relationship('User', foreign_keys=[requested_by_user], backref='user_certificate_requests')
+    admin_requester = db.relationship('Admin', foreign_keys=[requested_by_admin], backref='admin_certificate_requests')
     reviewer = db.relationship('Admin', foreign_keys=[reviewed_by], backref='certificate_requests_reviewed')
 
 

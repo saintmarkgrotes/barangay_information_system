@@ -2,8 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Barangay Information System - Login</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <style>
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+        
+        .register-link a {
+            color: #0b55ff;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .register-link a:hover {
+            color: #004ed6;
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
 <div class="login-container">
@@ -14,6 +34,21 @@
 
     <div class="login-right">
         <h2>Sign in Account</h2>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div style="padding: 10px; margin-bottom: 15px; border-radius: 8px; font-size: 13px;
+                    {% if category == 'danger' or category == 'error' %}background: #fee; color: #c00;
+                    {% elif category == 'warning' %}background: #fff4e5; color: #856404;
+                    {% elif category == 'success' %}background: #d4edda; color: #155724;
+                    {% else %}background: #d1ecf1; color: #0c5460;{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
         <form class="login-form" method="POST">
             <label for="username">Username</label>
@@ -27,10 +62,12 @@
             </div>
         </form>
 
+        <!-- Registration Link -->
+        <div class="register-link">
+            <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Register as Resident</a></p>
+        </div>
     </div>
 
 </div>
-
-
 </body>
 </html>

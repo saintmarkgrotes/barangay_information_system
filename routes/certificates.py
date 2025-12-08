@@ -25,6 +25,7 @@ def generate_qr_code(data):
     
     return f"data:image/png;base64,{img_str}"
 
+
 def generate_reference_number():
     """Generate unique reference number"""
     timestamp = datetime.datetime.utcnow().strftime('%Y%m%d')
@@ -51,10 +52,38 @@ def generate_certificate_number(cert_type):
     return f"{type_code}-{year}-{count:04d}"
 
 
+@certificates_bp.route('/resident-portal')
+@login_required
+def resident_portal():
+    """Resident-only portal for certificate requests"""
+    if current_user.role != 'resident':
+        flash('Access denied. This portal is for residents only.', 'danger')
+        return redirect(url_for('main.dashboard'))
+    
+    # Get resident's certificate requests
+    requests = CertificateRequest.query.filter_by(
+        requested_by=current_user.id
+    ).order_by(CertificateRequest.requested_at.desc()).all()
+    
+    # Get statistics
+    stats = {
+        'total': len(requests),
+        'pending': sum(1 for r in requests if r.status == 'pending'),
+        'approved': sum(1 for r in requests if r.status == 'approved'),
+        'rejected': sum(1 for r in requests if r.status == 'rejected')
+    }
+    
+    return render_template('certificates/resident_portal.html', requests=requests, stats=stats)
+
+
 @certificates_bp.route('/certificates')
 @login_required
 def list_certificates():
     """View certificate requests (user sees own, admin sees all)"""
+    # Redirect residents to their portal
+    if current_user.role == 'resident':
+        return redirect(url_for('certificates.resident_portal'))
+    
     if current_user.role == 'admin':
         requests = CertificateRequest.query.order_by(
             CertificateRequest.requested_at.desc()
@@ -88,6 +117,13 @@ def request_certificate():
         contact_number = request.form.get('contact_number', '').strip()
         resident_id = request.form.get('resident_id')
         
+        # For resident role, auto-fill name and contact if not provided
+        if current_user.role == 'resident':
+            if not requester_name and current_user.full_name:
+                requester_name = current_user.full_name
+            if not contact_number and current_user.contact_number:
+                contact_number = current_user.contact_number
+        
         # Validate
         if not all([certificate_type, purpose, requester_name, requester_address]):
             flash('Please fill in all required fields.', 'warning')
@@ -110,10 +146,18 @@ def request_certificate():
         db.session.commit()
         
         flash(f'Certificate request submitted successfully! Reference: {cert_request.reference_number}', 'success')
+        
+        # Redirect based on role
+        if current_user.role == 'resident':
+            return redirect(url_for('certificates.resident_portal'))
         return redirect(url_for('certificates.list_certificates'))
     
     # GET request - show form
-    residents = Resident.query.order_by(Resident.last_name, Resident.first_name).all()
+    # Only load residents for admin/user roles
+    residents = []
+    if current_user.role != 'resident':
+        residents = Resident.query.order_by(Resident.last_name, Resident.first_name).all()
+    
     certificate_types = [
         'Certificate of Indigency',
         'Barangay Clearance',
@@ -137,6 +181,8 @@ def view_certificate(id):
     # Security check - users can only view their own
     if current_user.role != 'admin' and cert.requested_by != current_user.id:
         flash('Access denied.', 'danger')
+        if current_user.role == 'resident':
+            return redirect(url_for('certificates.resident_portal'))
         return redirect(url_for('certificates.list_certificates'))
     
     return render_template('certificates/view.html', certificate=cert)
@@ -222,8 +268,12 @@ def print_certificate(id):
     cert = CertificateRequest.query.get_or_404(id)
     
     # Security check
-    if current_user.role != 'admin' and cert.requested_by != current_user.id:
+    if current_user.role not in ['admin', 'resident'] or (
+        current_user.role == 'resident' and cert.requested_by != current_user.id
+    ):
         flash('Access denied.', 'danger')
+        if current_user.role == 'resident':
+            return redirect(url_for('certificates.resident_portal'))
         return redirect(url_for('certificates.list_certificates'))
     
     if cert.status != 'approved':
@@ -256,8 +306,12 @@ def download_certificate(id):
     cert = CertificateRequest.query.get_or_404(id)
     
     # Security check
-    if current_user.role != 'admin' and cert.requested_by != current_user.id:
+    if current_user.role not in ['admin', 'resident'] or (
+        current_user.role == 'resident' and cert.requested_by != current_user.id
+    ):
         flash('Access denied.', 'danger')
+        if current_user.role == 'resident':
+            return redirect(url_for('certificates.resident_portal'))
         return redirect(url_for('certificates.list_certificates'))
     
     if cert.status != 'approved':

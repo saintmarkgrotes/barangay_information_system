@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resident Registration - Barangay Information System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: url("{{ url_for('static', filename='images/bg.png') }}") no-repeat center center fixed;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="w-full max-w-md">
+        <!-- Registration Card -->
+        <div class="overflow-hidden rounded-3xl bg-white shadow-2xl">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-blue-600 to-cyan-500 px-8 py-6 text-center">
+                <div class="mb-3 flex justify-center">
+                    <img 
+                        src="{{ url_for('static', filename='images/logo.png') }}" 
+                        alt="Logo" 
+                        class="h-16 w-16 rounded-lg shadow-lg">
+                </div>
+                <h1 class="text-2xl font-bold text-white">Resident Registration</h1>
+                <p class="mt-1 text-sm text-blue-100">Create your account to request certificates</p>
+            </div>
+
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="mx-6 mt-4 rounded-xl border-l-4 px-4 py-3
+                        {% if category == 'danger' or category == 'error' %}border-red-500 bg-red-50 text-red-800
+                        {% elif category == 'warning' %}border-yellow-500 bg-yellow-50 text-yellow-800
+                        {% elif category == 'success' %}border-green-500 bg-green-50 text-green-800
+                        {% else %}border-blue-500 bg-blue-50 text-blue-800{% endif %}">
+                        <p class="text-sm font-semibold">{{ message }}</p>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Registration Form -->
+            <form method="POST" action="{{ url_for('auth.register') }}" class="p-8">
+                <!-- Full Name -->
+                <div class="mb-5">
+                    <label class="mb-2 block text-sm font-semibold text-gray-700">
+                        Full Name <span class="text-red-500">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        name="full_name" 
+                        required
+                        placeholder="Juan Dela Cruz"
+                        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                </div>
+
+                <!-- Username -->
+                <div class="mb-5">
+                    <label class="mb-2 block text-sm font-semibold text-gray-700">
+                        Username <span class="text-red-500">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        name="username" 
+                        required
+                        placeholder="Choose a username"
+                        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                    <p class="mt-1 text-xs text-gray-500">At least 4 characters</p>
+                </div>
+
+                <!-- Contact Number -->
+                <div class="mb-5">
+                    <label class="mb-2 block text-sm font-semibold text-gray-700">
+                        Contact Number
+                    </label>
+                    <input 
+                        type="text" 
+                        name="contact_number"
+                        placeholder="+63 912 345 6789"
+                        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                </div>
+
+                <!-- Password -->
+                <div class="mb-5">
+                    <label class="mb-2 block text-sm font-semibold text-gray-700">
+                        Password <span class="text-red-500">*</span>
+                    </label>
+                    <input 
+                        type="password" 
+                        name="password" 
+                        required
+                        placeholder="Create a password"
+                        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                    <p class="mt-1 text-xs text-gray-500">At least 6 characters</p>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="mb-6">
+                    <label class="mb-2 block text-sm font-semibold text-gray-700">
+                        Confirm Password <span class="text-red-500">*</span>
+                    </label>
+                    <input 
+                        type="password" 
+                        name="confirm_password" 
+                        required
+                        placeholder="Confirm your password"
+                        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                </div>
+
+                <!-- Submit Button -->
+                <button 
+                    type="submit"
+                    class="w-full rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:from-blue-700 hover:to-cyan-600 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300">
+                    Create Account
+                </button>
+
+                <!-- Login Link -->
+                <div class="mt-6 text-center">
+                    <p class="text-sm text-gray-600">
+                        Already have an account? 
+                        <a href="{{ url_for('auth.login') }}" class="font-semibold text-blue-600 hover:text-blue-700 hover:underline">
+                            Sign in here
+                        </a>
+                    </p>
+                </div>
+            </form>
+        </div>
+
+        <!-- Info Note -->
+        <div class="mt-4 rounded-xl bg-white/90 p-4 shadow-lg backdrop-blur-sm">
+            <div class="flex gap-3">
+                <div class="text-xl">ℹ️</div>
+                <div class="text-xs text-gray-700">
+                    <p class="font-semibold">Note:</p>
+                    <p>This account is for requesting barangay certificates only. You will not have access to other system features.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
