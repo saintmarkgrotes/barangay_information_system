@@ -28,6 +28,17 @@
                 <p class="mt-1 text-sm text-blue-100">Create your account to request certificates</p>
             </div>
 
+            <!-- Important Notice -->
+            <div class="mx-6 mt-4 rounded-xl border-2 border-yellow-400 bg-yellow-50 p-4">
+                <div class="flex gap-3">
+                    <div class="text-2xl">⚠️</div>
+                    <div class="text-sm text-yellow-900">
+                        <p class="font-bold">Important:</p>
+                        <p class="mt-1">You must be registered in our barangay resident records to create an account. Your name will be verified during registration.</p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Flash Messages -->
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
@@ -56,6 +67,9 @@
                         required
                         placeholder="Juan Dela Cruz"
                         class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                    <p class="mt-1 text-xs text-gray-500">
+                        Enter your full name exactly as registered in barangay records
+                    </p>
                 </div>
 
                 <!-- Username -->
@@ -136,7 +150,12 @@
                 <div class="text-xl">ℹ️</div>
                 <div class="text-xs text-gray-700">
                     <p class="font-semibold">Note:</p>
-                    <p>This account is for requesting barangay certificates only. You will not have access to other system features.</p>
+                    <ul class="mt-1 list-inside list-disc space-y-1">
+                        <li>Your name will be verified against resident records</li>
+                        <li>Only registered barangay residents can create accounts</li>
+                        <li>If not registered, visit the barangay office first</li>
+                        <li>Account is only for requesting certificates</li>
+                    </ul>
                 </div>
             </div>
         </div>

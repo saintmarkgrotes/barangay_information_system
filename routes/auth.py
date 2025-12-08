@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_user, logout_user, login_required, current_user
-from models import Admin, db
+from models import Admin, Resident, db
 from flask_bcrypt import Bcrypt
 
 auth_bp = Blueprint('auth', __name__)
@@ -44,18 +44,19 @@ def login():
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
-    """Handle resident registration"""
+    """Handle resident registration - Only for registered residents"""
     if current_user.is_authenticated:
         return redirect(url_for('main.dashboard'))
     
     if request.method == 'POST':
+        # Get form data
         username = request.form.get('username', '').strip()
         password = request.form.get('password', '').strip()
         confirm_password = request.form.get('confirm_password', '').strip()
         full_name = request.form.get('full_name', '').strip()
         contact_number = request.form.get('contact_number', '').strip()
         
-        # Validation
+        # Basic validation
         if not all([username, password, confirm_password, full_name]):
             flash('Please fill in all required fields.', 'warning')
             return render_template('register.html')
@@ -78,7 +79,72 @@ def register():
             flash('Username already exists. Please choose another.', 'danger')
             return render_template('register.html')
         
-        # Create new resident user
+        # CRITICAL: Verify that the person exists in the Resident database
+        # Parse the full name to search for resident
+        name_parts = full_name.strip().split()
+        
+        if len(name_parts) < 2:
+            flash('Please enter your full name (at least first and last name).', 'warning')
+            return render_template('register.html')
+        
+        # Try to find matching resident
+        # Common patterns: "FirstName LastName" or "FirstName MiddleName LastName"
+        resident = None
+        
+        if len(name_parts) == 2:
+            # Try: FirstName LastName
+            first_name = name_parts[0]
+            last_name = name_parts[1]
+            resident = Resident.query.filter(
+                Resident.first_name.ilike(first_name),
+                Resident.last_name.ilike(last_name)
+            ).first()
+        elif len(name_parts) >= 3:
+            # Try: FirstName MiddleName LastName
+            first_name = name_parts[0]
+            middle_name = name_parts[1]
+            last_name = ' '.join(name_parts[2:])  # Handle multi-part last names
+            
+            resident = Resident.query.filter(
+                Resident.first_name.ilike(first_name),
+                Resident.middle_name.ilike(middle_name),
+                Resident.last_name.ilike(last_name)
+            ).first()
+            
+            # If not found, try without middle name
+            if not resident:
+                first_name = name_parts[0]
+                last_name = ' '.join(name_parts[1:])
+                resident = Resident.query.filter(
+                    Resident.first_name.ilike(first_name),
+                    Resident.last_name.ilike(last_name)
+                ).first()
+        
+        # If resident not found in database, deny registration
+        if not resident:
+            flash(
+                'Your name was not found in our resident records. '
+                'Please make sure you are registered as a barangay resident first, '
+                'or contact the barangay office for assistance.',
+                'danger'
+            )
+            return render_template('register.html')
+        
+        # Check if this resident already has an account
+        existing_resident_account = Admin.query.filter_by(
+            role='resident',
+            full_name=full_name
+        ).first()
+        
+        if existing_resident_account:
+            flash(
+                'An account with this name already exists. '
+                'If you forgot your password, please contact the barangay office.',
+                'danger'
+            )
+            return render_template('register.html')
+        
+        # Create new resident user account
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         new_user = Admin(
             username=username,
@@ -91,7 +157,10 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         
-        flash('Registration successful! You can now log in.', 'success')
+        flash(
+            f'Registration successful, {resident.first_name}! You can now log in and request certificates.',
+            'success'
+        )
         return redirect(url_for('auth.login'))
     
     return render_template('register.html')
