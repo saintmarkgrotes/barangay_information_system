@@ -184,11 +184,8 @@ def request_certificate():
 @login_required
 def view_certificate(id):
     """View certificate details"""
-    from sqlalchemy.orm import joinedload
-    requests = CertificateRequest.query.options(
-        joinedload(CertificateRequest.requester),
-        joinedload(CertificateRequest.reviewer)
-    ).order_by(...)
+    # Get certificate with relationships loaded
+    cert = CertificateRequest.query.get_or_404(id)
     
     # Security check - users can only view their own
     if current_user.role != 'admin' and cert.requested_by != current_user.id:

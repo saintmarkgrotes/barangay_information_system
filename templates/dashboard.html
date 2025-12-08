@@ -168,6 +168,10 @@
         </div>
     </div>
 
+    <!-- Pass data from Flask to JavaScript -->
+    <script id="purokLabelsData" type="application/json">{{ purok_labels | tojson }}</script>
+    <script id="purokPopulationData" type="application/json">{{ purok_counts | tojson }}</script>
+
     <script>
         // Toggle More Stats
         function toggleStats() {
@@ -249,28 +253,126 @@
                 renderCalendar();
             });
 
-            // Chart.js (responsive by default)
+            // Chart.js - Load real data from Flask
             const ctx = document.getElementById('purokBarGraph');
             if (ctx) {
+                // Get data from hidden script tags
+                const labelsData = document.getElementById('purokLabelsData');
+                const countsData = document.getElementById('purokPopulationData');
+                
+                let labels = [];
+                let data = [];
+                
+                try {
+                    labels = JSON.parse(labelsData.textContent);
+                    data = JSON.parse(countsData.textContent);
+                } catch (e) {
+                    console.error('Error parsing purok data:', e);
+                    // Fallback to empty data
+                    labels = ['No Data'];
+                    data = [0];
+                }
+
+                // Create gradient for bars
+                const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 400);
+                gradient.addColorStop(0, 'rgba(0, 114, 255, 0.8)');
+                gradient.addColorStop(1, 'rgba(0, 198, 255, 0.6)');
+
                 new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: ['Purok 1', 'Purok 2', 'Purok 3', 'Purok 4', 'Purok 5'],
+                        labels: labels,
                         datasets: [{
                             label: 'Population',
-                            data: [120, 95, 150, 80, 110],
-                            backgroundColor: 'rgba(0, 114, 255, 0.6)',
+                            data: data,
+                            backgroundColor: gradient,
                             borderColor: 'rgba(0, 114, 255, 1)',
-                            borderWidth: 2
+                            borderWidth: 2,
+                            borderRadius: 8,
+                            borderSkipped: false,
                         }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    font: {
+                                        size: 14,
+                                        weight: 'bold'
+                                    },
+                                    color: '#374151'
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                padding: 12,
+                                titleFont: {
+                                    size: 14,
+                                    weight: 'bold'
+                                },
+                                bodyFont: {
+                                    size: 13
+                                },
+                                borderColor: 'rgba(0, 114, 255, 0.8)',
+                                borderWidth: 1,
+                                callbacks: {
+                                    label: function(context) {
+                                        return 'Population: ' + context.parsed.y + ' residents';
+                                    }
+                                }
+                            }
+                        },
                         scales: {
                             y: {
-                                beginAtZero: true
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1,
+                                    font: {
+                                        size: 12
+                                    },
+                                    color: '#6B7280'
+                                },
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.05)'
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Number of Residents',
+                                    font: {
+                                        size: 13,
+                                        weight: 'bold'
+                                    },
+                                    color: '#374151'
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    font: {
+                                        size: 12
+                                    },
+                                    color: '#6B7280'
+                                },
+                                grid: {
+                                    display: false
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Purok',
+                                    font: {
+                                        size: 13,
+                                        weight: 'bold'
+                                    },
+                                    color: '#374151'
+                                }
                             }
+                        },
+                        animation: {
+                            duration: 1000,
+                            easing: 'easeInOutQuart'
                         }
                     }
                 });

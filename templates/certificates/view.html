@@ -1,0 +1,352 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <title>View Certificate Request - Barangay Information System</title>
+{% endblock %}
+
+{% block content %}
+    <main class="w-full min-h-screen px-4 py-20 sm:px-6 lg:px-8 lg:py-10">
+        <div class="mx-auto max-w-4xl">
+            <!-- Back Button -->
+            <a 
+                href="{% if current_user.role == 'admin' %}{{ url_for('certificates.admin_certificates') }}{% elif current_user.role == 'resident' %}{{ url_for('certificates.resident_portal') }}{% else %}{{ url_for('certificates.list_certificates') }}{% endif %}"
+                class="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-gray-600 transition-colors hover:text-blue-600 sm:mb-6 sm:text-base">
+                <span>←</span> Back to Certificate Requests
+            </a>
+
+            <!-- Certificate Header -->
+            <div class="mb-6 overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 p-6 text-center shadow-lg sm:p-8">
+                <div class="mb-3 text-5xl">📄</div>
+                <h1 class="text-2xl font-bold text-white sm:text-3xl">
+                    Certificate Request Details
+                </h1>
+                <p class="mt-2 text-sm text-blue-100 sm:text-base">
+                    Reference: {{ certificate.reference_number }}
+                </p>
+            </div>
+
+            <!-- Status Banner -->
+            <div class="mb-6 rounded-2xl p-4 sm:p-5
+                {% if certificate.status == 'pending' %}bg-yellow-50 border-2 border-yellow-400
+                {% elif certificate.status == 'approved' %}bg-green-50 border-2 border-green-400
+                {% elif certificate.status == 'rejected' %}bg-red-50 border-2 border-red-400
+                {% else %}bg-gray-50 border-2 border-gray-400{% endif %}">
+                <div class="flex items-center gap-3">
+                    <div class="text-3xl">
+                        {% if certificate.status == 'pending' %}⏳
+                        {% elif certificate.status == 'approved' %}✅
+                        {% elif certificate.status == 'rejected' %}❌
+                        {% else %}📋{% endif %}
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-bold
+                                {% if certificate.status == 'pending' %}text-yellow-900
+                                {% elif certificate.status == 'approved' %}text-green-900
+                                {% elif certificate.status == 'rejected' %}text-red-900
+                                {% else %}text-gray-900{% endif %}">
+                                Status: 
+                            </span>
+                            <span class="inline-flex rounded-full px-4 py-1 text-xs font-bold uppercase
+                                {% if certificate.status == 'pending' %}bg-yellow-200 text-yellow-900
+                                {% elif certificate.status == 'approved' %}bg-green-200 text-green-900
+                                {% elif certificate.status == 'rejected' %}bg-red-200 text-red-900
+                                {% else %}bg-gray-200 text-gray-900{% endif %}">
+                                {{ certificate.status }}
+                            </span>
+                        </div>
+                        <p class="mt-1 text-sm
+                            {% if certificate.status == 'pending' %}text-yellow-800
+                            {% elif certificate.status == 'approved' %}text-green-800
+                            {% elif certificate.status == 'rejected' %}text-red-800
+                            {% else %}text-gray-800{% endif %}">
+                            {% if certificate.status == 'pending' %}Your request is being reviewed by the barangay office.
+                            {% elif certificate.status == 'approved' %}Your certificate has been approved and is ready for printing!
+                            {% elif certificate.status == 'rejected' %}Your request has been rejected. See reason below.
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Certificate Information Card -->
+            <div class="mb-6 overflow-hidden rounded-2xl bg-white shadow-lg">
+                <div class="border-b-4 border-blue-600 bg-gradient-to-r from-blue-50 to-cyan-50 px-6 py-5">
+                    <h2 class="text-xl font-bold text-gray-800 sm:text-2xl">Certificate Information</h2>
+                </div>
+
+                <div class="p-6 sm:p-8">
+                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                        <!-- Certificate Type -->
+                        <div class="sm:col-span-2">
+                            <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                Certificate Type
+                            </label>
+                            <p class="text-lg font-bold text-blue-600">
+                                {{ certificate.certificate_type }}
+                            </p>
+                        </div>
+
+                        <!-- Reference Number -->
+                        <div>
+                            <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                Reference Number
+                            </label>
+                            <p class="font-mono text-base font-semibold text-gray-800">
+                                {{ certificate.reference_number }}
+                            </p>
+                        </div>
+
+                        <!-- Certificate Number (if approved) -->
+                        {% if certificate.certificate_number %}
+                        <div>
+                            <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                Certificate Number
+                            </label>
+                            <p class="font-mono text-base font-semibold text-green-600">
+                                {{ certificate.certificate_number }}
+                            </p>
+                        </div>
+                        {% endif %}
+
+                        <!-- Requester Name -->
+                        <div class="sm:col-span-2">
+                            <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                Requester Name
+                            </label>
+                            <p class="text-base font-semibold text-gray-800">
+                                {{ certificate.requester_name }}
+                            </p>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="sm:col-span-2">
+                            <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                Address
+                            </label>
+                            <p class="text-base text-gray-700">
+                                {{ certificate.requester_address }}
+                            </p>
+                        </div>
+
+                        <!-- Contact Number -->
+                        {% if certificate.contact_number %}
+                        <div>
+                            <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                Contact Number
+                            </label>
+                            <p class="text-base text-gray-800">
+                                {{ certificate.contact_number }}
+                            </p>
+                        </div>
+                        {% endif %}
+
+                        <!-- Purpose -->
+                        <div class="sm:col-span-2">
+                            <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                Purpose
+                            </label>
+                            <p class="rounded-lg bg-gray-50 p-4 text-base text-gray-800">
+                                {{ certificate.purpose }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Card -->
+            <div class="mb-6 overflow-hidden rounded-2xl bg-white shadow-lg">
+                <div class="border-b-4 border-purple-600 bg-gradient-to-r from-purple-50 to-pink-50 px-6 py-5">
+                    <h2 class="text-xl font-bold text-gray-800 sm:text-2xl">Request Timeline</h2>
+                </div>
+
+                <div class="p-6 sm:p-8">
+                    <div class="space-y-6">
+                        <!-- Requested -->
+                        <div class="flex gap-4">
+                            <div class="flex flex-col items-center">
+                                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white shadow-md">
+                                    <span class="text-lg">📝</span>
+                                </div>
+                                <div class="h-full w-0.5 bg-gray-300"></div>
+                            </div>
+                            <div class="flex-1 pb-8">
+                                <p class="font-bold text-gray-800">Request Submitted</p>
+                                <p class="text-sm text-gray-600">
+                                    {{ certificate.requested_at.strftime('%B %d, %Y at %I:%M %p') }}
+                                </p>
+                                <p class="mt-1 text-sm text-gray-500">
+                                    Submitted by: {{ certificate.requester.username }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Reviewed (if not pending) -->
+                        {% if certificate.status != 'pending' %}
+                        <div class="flex gap-4">
+                            <div class="flex flex-col items-center">
+                                <div class="flex h-10 w-10 items-center justify-center rounded-full 
+                                    {% if certificate.status == 'approved' %}bg-green-600
+                                    {% else %}bg-red-600{% endif %} text-white shadow-md">
+                                    <span class="text-lg">
+                                        {% if certificate.status == 'approved' %}✓{% else %}✗{% endif %}
+                                    </span>
+                                </div>
+                                {% if certificate.status == 'approved' %}
+                                <div class="h-full w-0.5 bg-gray-300"></div>
+                                {% endif %}
+                            </div>
+                            <div class="flex-1 {% if certificate.status == 'approved' %}pb-8{% endif %}">
+                                <p class="font-bold text-gray-800">
+                                    {% if certificate.status == 'approved' %}Approved
+                                    {% else %}Rejected{% endif %}
+                                </p>
+                                <p class="text-sm text-gray-600">
+                                    {{ certificate.reviewed_at.strftime('%B %d, %Y at %I:%M %p') if certificate.reviewed_at else 'N/A' }}
+                                </p>
+                                <p class="mt-1 text-sm text-gray-500">
+                                    Reviewed by: {{ certificate.reviewer.username if certificate.reviewer else 'N/A' }}
+                                </p>
+                                {% if certificate.status == 'rejected' and certificate.rejection_reason %}
+                                <div class="mt-3 rounded-lg bg-red-50 p-3">
+                                    <p class="text-xs font-semibold uppercase text-red-700">Rejection Reason:</p>
+                                    <p class="mt-1 text-sm text-red-900">{{ certificate.rejection_reason }}</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Issued (if approved) -->
+                        {% if certificate.status == 'approved' and certificate.issued_date %}
+                        <div class="flex gap-4">
+                            <div class="flex flex-col items-center">
+                                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-purple-600 text-white shadow-md">
+                                    <span class="text-lg">🎉</span>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-bold text-gray-800">Certificate Issued</p>
+                                <p class="text-sm text-gray-600">
+                                    {{ certificate.issued_date.strftime('%B %d, %Y') }}
+                                </p>
+                                <p class="mt-1 text-sm text-green-600 font-semibold">
+                                    Certificate Number: {{ certificate.certificate_number }}
+                                </p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col gap-3 sm:flex-row sm:justify-between">
+                <a 
+                    href="{% if current_user.role == 'admin' %}{{ url_for('certificates.admin_certificates') }}{% elif current_user.role == 'resident' %}{{ url_for('certificates.resident_portal') }}{% else %}{{ url_for('certificates.list_certificates') }}{% endif %}"
+                    class="w-full rounded-full border-2 border-gray-300 bg-white px-6 py-3 text-center text-sm font-bold text-gray-700 transition-all hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 sm:w-auto">
+                    Back to List
+                </a>
+                
+                {% if certificate.status == 'approved' %}
+                <div class="flex flex-col gap-3 sm:flex-row">
+                    <a 
+                        href="{{ url_for('certificates.print_certificate', id=certificate.id) }}"
+                        target="_blank"
+                        class="w-full rounded-full bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-3 text-center text-sm font-bold text-white shadow-lg transition-all hover:from-green-700 hover:to-emerald-700 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-green-300 sm:w-auto">
+                        🖨️ Print Certificate
+                    </a>
+                    <a 
+                        href="{{ url_for('certificates.download_certificate', id=certificate.id) }}"
+                        class="w-full rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 text-center text-sm font-bold text-white shadow-lg transition-all hover:from-blue-700 hover:to-cyan-600 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto">
+                        📥 Download PDF
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if current_user.role == 'admin' and certificate.status == 'pending' %}
+            <!-- Admin Actions (only if pending) -->
+            <div class="mt-6 overflow-hidden rounded-2xl bg-white shadow-lg">
+                <div class="border-b-4 border-orange-600 bg-gradient-to-r from-orange-50 to-yellow-50 px-6 py-5">
+                    <h2 class="text-xl font-bold text-gray-800 sm:text-2xl">Admin Actions</h2>
+                </div>
+
+                <div class="p-6 sm:p-8">
+                    <div class="flex flex-col gap-3 sm:flex-row">
+                        <form method="POST" action="{{ url_for('certificates.approve_certificate', id=certificate.id) }}" class="flex-1">
+                            <button 
+                                type="submit"
+                                onclick="return confirm('Approve this certificate request?')"
+                                class="w-full rounded-full bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:from-green-700 hover:to-emerald-700 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-green-300">
+                                ✓ Approve Request
+                            </button>
+                        </form>
+                        
+                        <button 
+                            onclick="openRejectModal()"
+                            class="w-full rounded-full bg-gradient-to-r from-red-600 to-red-700 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:from-red-700 hover:to-red-800 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-red-300 sm:flex-1">
+                            ✗ Reject Request
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reject Modal -->
+            <div id="rejectModal" class="fixed inset-0 z-[9999] hidden overflow-y-auto bg-black/50 backdrop-blur-sm">
+                <div class="flex min-h-full items-center justify-center p-4">
+                    <div class="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800">Reject Certificate Request</h3>
+                            <p class="mt-2 text-sm text-gray-600">
+                                Please provide a reason for rejecting this certificate request.
+                            </p>
+                            <form method="POST" action="{{ url_for('certificates.reject_certificate', id=certificate.id) }}" class="mt-4">
+                                <textarea 
+                                    name="rejection_reason"
+                                    rows="3"
+                                    required
+                                    placeholder="Enter reason for rejection..."
+                                    class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm text-gray-900 transition-all focus:border-red-500 focus:outline-none focus:ring-4 focus:ring-red-100"></textarea>
+                                
+                                <div class="mt-4 flex gap-3">
+                                    <button 
+                                        type="button"
+                                        onclick="closeRejectModal()"
+                                        class="flex-1 rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-bold text-gray-700 transition-all hover:bg-gray-50">
+                                        Cancel
+                                    </button>
+                                    <button 
+                                        type="submit"
+                                        class="flex-1 rounded-full bg-gradient-to-r from-red-600 to-red-700 px-4 py-2 text-sm font-bold text-white shadow-lg transition-all hover:from-red-700 hover:to-red-800">
+                                        Reject
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                function openRejectModal() {
+                    document.getElementById('rejectModal').classList.remove('hidden');
+                    document.getElementById('rejectModal').classList.add('flex');
+                    document.body.style.overflow = 'hidden';
+                }
+
+                function closeRejectModal() {
+                    document.getElementById('rejectModal').classList.add('hidden');
+                    document.getElementById('rejectModal').classList.remove('flex');
+                    document.body.style.overflow = 'auto';
+                }
+
+                // Close on escape key
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') closeRejectModal();
+                });
+            </script>
+            {% endif %}
+        </div>
+    </main>
+{% endblock %}
