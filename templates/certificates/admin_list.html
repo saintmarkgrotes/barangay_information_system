@@ -2,12 +2,6 @@
 
 {% block head %}
     <title>Manage Certificates - Admin Panel</title>
-    <script>
-        // Pass user role to JavaScript
-        document.addEventListener('DOMContentLoaded', () => {
-            document.body.dataset.userRole = '{{ current_user.role }}';
-        });
-    </script>
 {% endblock %}
 
 {% block content %}
@@ -20,11 +14,7 @@
                         Certificate Management
                     </h1>
                     <p class="mt-2 text-sm text-gray-600 sm:text-base">
-                        Review and process certificate requests • 
-                        <span class="inline-flex items-center gap-1">
-                            <span class="inline-block h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
-                            <span class="text-green-600 font-semibold">Live Updates</span>
-                        </span>
+                        Review and process certificate requests
                     </p>
                 </div>
                 <a 
@@ -38,33 +28,28 @@
             <div class="mb-6 grid grid-cols-2 gap-4 sm:mb-8 lg:grid-cols-4">
                 <div class="overflow-hidden rounded-2xl bg-white shadow-md">
                     <div class="p-5 text-center">
-                        <div data-stat="total" class="text-3xl font-bold text-gray-800 sm:text-4xl">{{ stats.total }}</div>
+                        <div class="text-3xl font-bold text-gray-800 sm:text-4xl">{{ stats.total }}</div>
                         <div class="mt-1 text-xs font-medium uppercase tracking-wider text-gray-600 sm:text-sm">Total Requests</div>
-                    </div>
-                </div>
-
-                <div class="overflow-hidden rounded-2xl bg-white shadow-md relative">
-                    <div class="p-5 text-center">
-                        <div data-stat="pending" class="text-3xl font-bold text-yellow-600 sm:text-4xl">{{ stats.pending }}</div>
-                        <div class="mt-1 text-xs font-medium uppercase tracking-wider text-gray-600 sm:text-sm">Pending</div>
-                        {% if stats.pending > 0 %}
-                        <span data-badge="pending" class="absolute -top-2 -right-2 inline-flex items-center justify-center rounded-full bg-red-500 px-2 py-1 text-xs font-bold text-white">
-                            {{ stats.pending }}
-                        </span>
-                        {% endif %}
                     </div>
                 </div>
 
                 <div class="overflow-hidden rounded-2xl bg-white shadow-md">
                     <div class="p-5 text-center">
-                        <div data-stat="approved" class="text-3xl font-bold text-green-600 sm:text-4xl">{{ stats.approved }}</div>
+                        <div class="text-3xl font-bold text-yellow-600 sm:text-4xl">{{ stats.pending }}</div>
+                        <div class="mt-1 text-xs font-medium uppercase tracking-wider text-gray-600 sm:text-sm">Pending</div>
+                    </div>
+                </div>
+
+                <div class="overflow-hidden rounded-2xl bg-white shadow-md">
+                    <div class="p-5 text-center">
+                        <div class="text-3xl font-bold text-green-600 sm:text-4xl">{{ stats.approved }}</div>
                         <div class="mt-1 text-xs font-medium uppercase tracking-wider text-gray-600 sm:text-sm">Approved</div>
                     </div>
                 </div>
 
                 <div class="overflow-hidden rounded-2xl bg-white shadow-md">
                     <div class="p-5 text-center">
-                        <div data-stat="rejected" class="text-3xl font-bold text-red-600 sm:text-4xl">{{ stats.rejected }}</div>
+                        <div class="text-3xl font-bold text-red-600 sm:text-4xl">{{ stats.rejected }}</div>
                         <div class="mt-1 text-xs font-medium uppercase tracking-wider text-gray-600 sm:text-sm">Rejected</div>
                     </div>
                 </div>
@@ -124,13 +109,13 @@
                         </thead>
                         <tbody class="divide-y divide-gray-200">
                             {% for cert in requests %}
-                            <tr class="transition-colors hover:bg-gray-50" data-request-id="{{ cert.id }}">
+                            <tr class="transition-colors hover:bg-gray-50">
                                 <td class="px-6 py-4">
                                     <div class="text-sm font-mono font-semibold text-gray-900">
                                         {{ cert.reference_number }}
                                     </div>
                                     {% if cert.certificate_number %}
-                                    <div class="cert-number text-xs font-mono text-gray-500">
+                                    <div class="text-xs font-mono text-gray-500">
                                         {{ cert.certificate_number }}
                                     </div>
                                     {% endif %}
@@ -157,7 +142,7 @@
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <span class="status-badge inline-flex rounded-full px-3 py-1 text-xs font-bold uppercase
+                                    <span class="inline-flex rounded-full px-3 py-1 text-xs font-bold uppercase
                                         {% if cert.status == 'pending' %}bg-yellow-100 text-yellow-800
                                         {% elif cert.status == 'approved' %}bg-green-100 text-green-800
                                         {% elif cert.status == 'rejected' %}bg-red-100 text-red-800
@@ -279,9 +264,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Load Real-time Script -->
-    <script src="{{ url_for('static', filename='js/realtime_certificates.js') }}"></script>
 
     <script>
         function openApproveModal(id) {
