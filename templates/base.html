@@ -66,7 +66,9 @@
                     <a 
                         href="{{ url_for('main.dashboard') }}" 
                         class="flex items-center gap-3 px-5 py-4 text-white font-medium transition-all hover:bg-white/10 hover:pl-6">
-                        <span class="text-xl">📊</span>
+                        <img src="{{ url_for('static', filename='icons/dashboard.png') }}" 
+                            alt="Dashboard Icon" 
+                            class="h-6 w-6">
                         <span>Dashboard</span>
                     </a>
                 </li>
@@ -74,7 +76,9 @@
                     <a 
                         href="{{ url_for('residents.list_residents') }}" 
                         class="flex items-center gap-3 px-5 py-4 text-white font-medium transition-all hover:bg-white/10 hover:pl-6">
-                        <span class="text-xl">👥</span>
+                        <img src="{{ url_for('static', filename='icons/residents.png') }}" 
+                             alt="Resident Icon" 
+                             class="h-6 w-6">
                         <span>Resident Section</span>
                     </a>
                 </li>
@@ -82,7 +86,9 @@
                     <a 
                         href="{{ url_for('residents.pending_residents') }}" 
                         class="flex items-center gap-3 px-5 py-4 text-white font-medium transition-all hover:bg-white/10 hover:pl-6">
-                        <span class="text-xl">⏳</span>
+                        <img src="{{ url_for('static', filename='icons/pending.png') }}" 
+                            alt="Pending Icon" 
+                            class="h-6 w-6">
                         <span>
                             {% if current_user.role == 'admin' %}
                                 Pending Approvals
@@ -96,7 +102,9 @@
                     <a 
                         href="{{ url_for('officials.list_officials') }}" 
                         class="flex items-center gap-3 px-5 py-4 text-white font-medium transition-all hover:bg-white/10 hover:pl-6">
-                        <span class="text-xl">👔</span>
+                        <img src="{{ url_for('static', filename='icons/officials.png') }}" 
+                             alt="Elected Officials Icon" 
+                             class="h-6 w-6">
                         <span>Elected Officials</span>
                     </a>
                 </li>
@@ -104,7 +112,9 @@
                     <a 
                         href="{{ url_for('households.list_households') }}" 
                         class="flex items-center gap-3 px-5 py-4 text-white font-medium transition-all hover:bg-white/10 hover:pl-6">
-                        <span class="text-xl">🏠</span>
+                        <img src="{{ url_for('static', filename='icons/households.png') }}" 
+                             alt="Household Icon" 
+                             class="h-6 w-6">
                         <span>Household List</span>
                     </a>
                 </li>
@@ -113,7 +123,9 @@
                     <a 
                         href="{{ url_for('settings.system_settings') }}" 
                         class="flex items-center gap-3 px-5 py-4 text-white font-medium transition-all hover:bg-white/10 hover:pl-6">
-                        <span class="text-xl">⚙️</span>
+                        <img src="{{ url_for('static', filename='icons/settings.png') }}" 
+                             alt="Setting Icon" 
+                             class="h-6 w-6">
                         <span>System Settings</span>
                     </a>
                 </li>
@@ -124,7 +136,9 @@
                 <a 
                     href="{{ url_for('certificates.list_certificates') }}" 
                     class="flex items-center gap-3 px-5 py-4 text-white font-medium transition-all hover:bg-white/10 hover:pl-6">
-                    <span class="text-xl">📄</span>
+                    <img src="{{ url_for('static', filename='icons/certificates.png') }}" 
+                         alt="Certificate Icon" 
+                         class="h-6 w-6">
                     <span>Certificates</span>
                 </a>
             </li>
@@ -135,7 +149,9 @@
                 <a 
                     href="{{ url_for('certificates.admin_certificates') }}" 
                     class="flex items-center gap-3 px-5 py-4 text-white font-medium transition-all hover:bg-white/10 hover:pl-6">
-                    <span class="text-xl">✅</span>
+                    <img src="{{ url_for('static', filename='icons/certificate_req.png') }}" 
+                         alt="Certificate Request Icon" 
+                         class="h-6 w-6">
                     <span>Certificate Requests</span>
                 </a>
             </li>
@@ -147,7 +163,9 @@
                 <a 
                     href="{{ url_for('auth.logout') }}" 
                     class="flex items-center gap-3 rounded-lg bg-white/10 px-5 py-3 text-white font-medium transition-all hover:bg-white/20">
-                    <span class="text-xl">🚪</span>
+                    <img src="{{ url_for('static', filename='icons/logout.png') }}" 
+                         alt="Logout Icon" 
+                         class="h-6 w-6">
                     <span>Logout</span>
                 </a>
             </div>

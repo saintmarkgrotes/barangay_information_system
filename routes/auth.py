@@ -79,52 +79,79 @@ def register():
             flash('Username already exists. Please choose another.', 'danger')
             return render_template('register.html')
         
-        # CRITICAL: Verify that the person exists in the Resident database
-        # Parse the full name to search for resident
-        name_parts = full_name.strip().split()
+        # FIXED: Verify that the person exists in the Resident database
+        # Parse the full name - try multiple patterns
+        name_parts = [part.strip() for part in full_name.strip().split() if part.strip()]
         
         if len(name_parts) < 2:
             flash('Please enter your full name (at least first and last name).', 'warning')
             return render_template('register.html')
         
-        # Try to find matching resident
-        # Common patterns: "FirstName LastName" or "FirstName MiddleName LastName"
+        # Try to find matching resident with case-insensitive search
         resident = None
         
+        # Pattern 1: First Last
         if len(name_parts) == 2:
-            # Try: FirstName LastName
             first_name = name_parts[0]
             last_name = name_parts[1]
             resident = Resident.query.filter(
-                Resident.first_name.ilike(first_name),
-                Resident.last_name.ilike(last_name)
+                db.func.lower(Resident.first_name) == first_name.lower(),
+                db.func.lower(Resident.last_name) == last_name.lower()
             ).first()
-        elif len(name_parts) >= 3:
-            # Try: FirstName MiddleName LastName
+        
+        # Pattern 2: First Middle Last
+        if not resident and len(name_parts) >= 3:
             first_name = name_parts[0]
             middle_name = name_parts[1]
             last_name = ' '.join(name_parts[2:])  # Handle multi-part last names
             
             resident = Resident.query.filter(
-                Resident.first_name.ilike(first_name),
-                Resident.middle_name.ilike(middle_name),
-                Resident.last_name.ilike(last_name)
+                db.func.lower(Resident.first_name) == first_name.lower(),
+                db.func.lower(Resident.middle_name) == middle_name.lower(),
+                db.func.lower(Resident.last_name) == last_name.lower()
             ).first()
+        
+        # Pattern 3: First LastName (with middle name in database)
+        if not resident and len(name_parts) >= 2:
+            first_name = name_parts[0]
+            last_name = ' '.join(name_parts[1:])
             
-            # If not found, try without middle name
-            if not resident:
-                first_name = name_parts[0]
-                last_name = ' '.join(name_parts[1:])
-                resident = Resident.query.filter(
-                    Resident.first_name.ilike(first_name),
-                    Resident.last_name.ilike(last_name)
-                ).first()
+            resident = Resident.query.filter(
+                db.func.lower(Resident.first_name) == first_name.lower(),
+                db.func.lower(Resident.last_name) == last_name.lower()
+            ).first()
+        
+        # Pattern 4: Try matching with any name order
+        if not resident:
+            # Try searching by individual name parts
+            for i in range(len(name_parts)):
+                for j in range(i+1, len(name_parts)):
+                    first = name_parts[i]
+                    last = name_parts[j]
+                    
+                    resident = Resident.query.filter(
+                        db.or_(
+                            db.and_(
+                                db.func.lower(Resident.first_name) == first.lower(),
+                                db.func.lower(Resident.last_name) == last.lower()
+                            ),
+                            db.and_(
+                                db.func.lower(Resident.first_name) == last.lower(),
+                                db.func.lower(Resident.last_name) == first.lower()
+                            )
+                        )
+                    ).first()
+                    
+                    if resident:
+                        break
+                if resident:
+                    break
         
         # If resident not found in database, deny registration
         if not resident:
             flash(
                 'Your name was not found in our resident records. '
-                'Please make sure you are registered as a barangay resident first, '
+                'Please make sure you enter your name exactly as registered (First Middle Last), '
                 'or contact the barangay office for assistance.',
                 'danger'
             )

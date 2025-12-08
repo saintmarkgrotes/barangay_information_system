@@ -4,70 +4,108 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Barangay Information System - Login</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .register-link {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 13px;
-        }
-        
-        .register-link a {
-            color: #0b55ff;
-            font-weight: 600;
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        
-        .register-link a:hover {
-            color: #004ed6;
-            text-decoration: underline;
+        body {
+            background: url("{{ url_for('static', filename='images/bg.png') }}") no-repeat center center fixed;
+            background-size: cover;
         }
     </style>
 </head>
-<body>
-<div class="login-container">
-
-    <div class="login-left">
-           <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
-    </div>
-
-    <div class="login-right">
-        <h2>Sign in Account</h2>
-
-        <!-- Flash Messages -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                <div style="padding: 10px; margin-bottom: 15px; border-radius: 8px; font-size: 13px;
-                    {% if category == 'danger' or category == 'error' %}background: #fee; color: #c00;
-                    {% elif category == 'warning' %}background: #fff4e5; color: #856404;
-                    {% elif category == 'success' %}background: #d4edda; color: #155724;
-                    {% else %}background: #d1ecf1; color: #0c5460;{% endif %}">
-                    {{ message }}
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="w-full max-w-md">
+        <!-- Login Card -->
+        <div class="overflow-hidden rounded-3xl bg-white shadow-2xl">
+            <!-- Header with Logo -->
+            <div class="bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-8 text-center sm:px-8">
+                <div class="mb-4 flex justify-center">
+                    <img 
+                        src="{{ url_for('static', filename='images/logo.png') }}" 
+                        alt="Logo" 
+                        class="h-16 w-16 rounded-lg shadow-lg sm:h-20 sm:w-20">
                 </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-
-        <form class="login-form" method="POST">
-            <label for="username">Username</label>
-            <input type="text" name="username" id="username" required>
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password" required>
-
-            <div class="next-container">
-                <span>Login</span>
-                <button type="submit" class="next-btn">❯</button>
+                <h1 class="text-2xl font-bold text-white sm:text-3xl">Barangay System</h1>
+                <p class="mt-2 text-sm text-blue-100 sm:text-base">Sign in to your account</p>
             </div>
-        </form>
 
-        <!-- Registration Link -->
-        <div class="register-link">
-            <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Register as Resident</a></p>
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="mx-4 mt-4 rounded-xl border-l-4 px-4 py-3 sm:mx-6
+                        {% if category == 'danger' or category == 'error' %}border-red-500 bg-red-50 text-red-800
+                        {% elif category == 'warning' %}border-yellow-500 bg-yellow-50 text-yellow-800
+                        {% elif category == 'success' %}border-green-500 bg-green-50 text-green-800
+                        {% else %}border-blue-500 bg-blue-50 text-blue-800{% endif %}">
+                        <p class="text-sm font-semibold">{{ message }}</p>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Login Form -->
+            <form class="p-6 sm:p-8" method="POST">
+                <!-- Username -->
+                <div class="mb-5">
+                    <label for="username" class="mb-2 block text-sm font-semibold text-gray-700">
+                        Username
+                    </label>
+                    <input 
+                        type="text" 
+                        name="username" 
+                        id="username" 
+                        required
+                        placeholder="Enter your username"
+                        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-base text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                </div>
+
+                <!-- Password -->
+                <div class="mb-6">
+                    <label for="password" class="mb-2 block text-sm font-semibold text-gray-700">
+                        Password
+                    </label>
+                    <input 
+                        type="password" 
+                        name="password" 
+                        id="password" 
+                        required
+                        placeholder="Enter your password"
+                        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-base text-gray-900 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                </div>
+
+                <!-- Login Button -->
+                <button 
+                    type="submit"
+                    class="w-full rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 text-base font-bold text-white shadow-lg transition-all hover:from-blue-700 hover:to-cyan-600 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300">
+                    Sign In
+                </button>
+
+                <!-- Registration Link -->
+                <div class="mt-6 text-center">
+                    <p class="text-sm text-gray-600">
+                        Don't have an account? 
+                        <a href="{{ url_for('auth.register') }}" class="font-semibold text-blue-600 hover:text-blue-700 hover:underline">
+                            Register as Resident
+                        </a>
+                    </p>
+                </div>
+            </form>
+        </div>
+
+        <!-- Info Note -->
+        <div class="mt-4 rounded-xl bg-white/90 p-4 shadow-lg backdrop-blur-sm">
+            <div class="flex gap-3">
+                <div class="text-xl">ℹ️</div>
+                <div class="text-xs text-gray-700">
+                    <p class="font-semibold">Access Levels:</p>
+                    <ul class="mt-1 space-y-1">
+                        <li>• <strong>Admin:</strong> Full system access</li>
+                        <li>• <strong>User:</strong> Can add/edit residents</li>
+                        <li>• <strong>Resident:</strong> Request certificates</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
-
-</div>
 </body>
 </html>

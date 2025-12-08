@@ -2,41 +2,214 @@
 
 {% block head %}
     <title>Resident Info - Barangay Information System</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/resident_info.css') }}">
-        <main class="residents-container">
-            <div class="back-btn">
-                <a href="{{ url_for('residents.add_resident') }}">Back</a>
+{% endblock %}
+
+{% block content %}
+    <main class="w-full min-h-screen px-4 py-20 sm:px-6 lg:px-8 lg:py-10">
+        <div class="mx-auto max-w-5xl">
+            <!-- Back Button -->
+            <a 
+                href="{{ url_for('residents.list_residents') }}" 
+                class="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-gray-600 transition-colors hover:text-blue-600 sm:mb-6 sm:text-base">
+                <span>←</span> Back to Residents
+            </a>
+
+            <!-- Resident Header -->
+            <div class="mb-6 rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 p-6 text-center shadow-lg sm:p-8">
+                <div class="mb-3 text-6xl">👤</div>
+                <h1 class="text-2xl font-bold text-white sm:text-3xl lg:text-4xl">
+                    {{ resident.first_name }} {{ resident.middle_name }} {{ resident.last_name }}
+                </h1>
+                <p class="mt-2 text-sm text-blue-100 sm:text-base">Resident Information</p>
             </div>
 
-            <div class="resident-header">
-                <h1 class="resident-name">{{ resident.first_name}} {{resident.middle_name}} {{resident.last_name}}</h1>
-            </div>
+            <!-- Resident Information Card -->
+            <div class="overflow-hidden rounded-2xl bg-white shadow-lg">
+                <div class="border-b-4 border-blue-600 bg-gradient-to-r from-blue-50 to-cyan-50 px-6 py-5">
+                    <h2 class="text-xl font-bold text-gray-800 sm:text-2xl">Personal Details</h2>
+                </div>
 
-            <table class="resident-info-table">
-                <tr>
-                    <td><strong>Last Name:</strong></td>
-                    <td>{{ resident.last_name }}</td>
-                    <td><strong>Age:</strong></td>
-                    <td>{{ resident.age }} yrs old</td>
-                    <td><strong>Civil Status:</strong></td>
-                    <td>{{ resident.civil_status }}</td>
-                </tr>
-                <tr>
-                    <td><strong>First Name:</strong></td>
-                    <td>{{ resident.first_name }}</td>
-                    <td><strong>Date of Birth:</strong></td>
-                    <td>{% if resident.date_of_birth %}{{ resident.date_of_birth.strftime('%B %d, %Y') }}{% endif %}</td>
-                    <td><strong>Citizenship:</strong></td>
-                    <td>{{ resident.citizenship }}</td>
-                </tr>
-                <tr>
-                    <td><strong>Middle Name:</strong></td>
-                    <td>{{ resident.middle_name }}</td>
-                    <td><strong>Place of Birth:</strong></td>
-                    <td>{{ resident.place_of_birth }}</td>
-                    <td><strong>Occupation:</strong></td>
-                    <td>{{ resident.occupation }}</td>
-                </tr>
-            </table>
-        </main>
+                <div class="p-6 sm:p-8">
+                    <!-- Information Grid - Responsive -->
+                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        <!-- Last Name -->
+                        <div>
+                            <label class="mb-1 block text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                Last Name
+                            </label>
+                            <p class="text-base font-semibold text-gray-800 sm:text-lg">
+                                {{ resident.last_name }}
+                            </p>
+                        </div>
+
+                        <!-- First Name -->
+                        <div>
+                            <label class="mb-1 block text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                First Name
+                            </label>
+                            <p class="text-base font-semibold text-gray-800 sm:text-lg">
+                                {{ resident.first_name }}
+                            </p>
+                        </div>
+
+                        <!-- Middle Name -->
+                        <div>
+                            <label class="mb-1 block text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                Middle Name
+                            </label>
+                            <p class="text-base font-semibold text-gray-800 sm:text-lg">
+                                {{ resident.middle_name or '—' }}
+                            </p>
+                        </div>
+
+                        <!-- Gender -->
+                        <div>
+                            <label class="mb-1 block text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                Gender
+                            </label>
+                            <p class="text-base font-semibold text-gray-800 sm:text-lg">
+                                {{ resident.gender }}
+                            </p>
+                        </div>
+
+                        <!-- Age -->
+                        <div>
+                            <label class="mb-1 block text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                Age
+                            </label>
+                            <p class="text-base font-semibold text-gray-800 sm:text-lg">
+                                {{ resident.age }} years old
+                            </p>
+                        </div>
+
+                        <!-- Date of Birth -->
+                        <div>
+                            <label class="mb-1 block text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                Date of Birth
+                            </label>
+                            <p class="text-base font-semibold text-gray-800 sm:text-lg">
+                                {% if resident.date_of_birth %}
+                                    {{ resident.date_of_birth.strftime('%B %d, %Y') }}
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </p>
+                        </div>
+
+                        <!-- Place of Birth -->
+                        <div>
+                            <label class="mb-1 block text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                Place of Birth
+                            </label>
+                            <p class="text-base font-semibold text-gray-800 sm:text-lg">
+                                {{ resident.place_of_birth or '—' }}
+                            </p>
+                        </div>
+
+                        <!-- Civil Status -->
+                        <div>
+                            <label class="mb-1 block text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                Civil Status
+                            </label>
+                            <p class="text-base font-semibold text-gray-800 sm:text-lg">
+                                {{ resident.civil_status or '—' }}
+                            </p>
+                        </div>
+
+                        <!-- Citizenship -->
+                        <div>
+                            <label class="mb-1 block text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                Citizenship
+                            </label>
+                            <p class="text-base font-semibold text-gray-800 sm:text-lg">
+                                {{ resident.citizenship or '—' }}
+                            </p>
+                        </div>
+
+                        <!-- Occupation -->
+                        <div>
+                            <label class="mb-1 block text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                Occupation
+                            </label>
+                            <p class="text-base font-semibold text-gray-800 sm:text-lg">
+                                {{ resident.occupation or '—' }}
+                            </p>
+                        </div>
+
+                        <!-- Purok -->
+                        <div>
+                            <label class="mb-1 block text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                Purok
+                            </label>
+                            <p class="text-base font-semibold text-gray-800 sm:text-lg">
+                                {{ resident.purok }}
+                            </p>
+                        </div>
+
+                        <!-- Voter Status -->
+                        <div>
+                            <label class="mb-1 block text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                Voter Status
+                            </label>
+                            <p class="text-base font-semibold text-gray-800 sm:text-lg">
+                                <span class="inline-block rounded-full px-3 py-1 text-xs font-bold uppercase
+                                    {% if resident.voter_status == 'Voter' %}bg-green-100 text-green-800
+                                    {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                    {{ resident.voter_status }}
+                                </span>
+                            </p>
+                        </div>
+
+                        <!-- Senior Citizen -->
+                        <div>
+                            <label class="mb-1 block text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                Senior Citizen
+                            </label>
+                            <p class="text-base font-semibold text-gray-800 sm:text-lg">
+                                <span class="inline-block rounded-full px-3 py-1 text-xs font-bold uppercase
+                                    {% if resident.senior_citizen == 'Yes' %}bg-purple-100 text-purple-800
+                                    {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                    {{ resident.senior_citizen }}
+                                </span>
+                            </p>
+                        </div>
+
+                        <!-- Household -->
+                        <div class="sm:col-span-2 lg:col-span-3">
+                            <label class="mb-1 block text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                Household
+                            </label>
+                            <p class="text-base font-semibold text-gray-800 sm:text-lg">
+                                {% if resident.household %}
+                                    <a 
+                                        href="{{ url_for('households.household_detail', id=resident.household.id) }}" 
+                                        class="text-blue-600 hover:text-blue-700 hover:underline">
+                                        {{ resident.household.household_no }}
+                                    </a>
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    {% if current_user.role == 'admin' %}
+                    <div class="mt-8 flex flex-col gap-3 border-t border-gray-200 pt-6 sm:flex-row">
+                        <button 
+                            onclick="openEditModal({{ resident.id }})"
+                            class="w-full rounded-full bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:from-green-700 hover:to-emerald-700 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-green-300 sm:w-auto">
+                            Edit Resident
+                        </button>
+                        <a 
+                            href="{{ url_for('residents.list_residents') }}"
+                            class="w-full rounded-full border-2 border-gray-300 bg-white px-6 py-3 text-center text-sm font-bold text-gray-700 transition-all hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 sm:w-auto">
+                            Back to List
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </main>
 {% endblock %}

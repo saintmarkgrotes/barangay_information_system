@@ -2,12 +2,15 @@
 
 {% block head %}
     <title>Elected Officials - Barangay Information System</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
+    <script>
+        // Pass data to JavaScript
+        document.body.dataset.staticUrl = "{{ url_for('static', filename='') }}".slice(0, -1);
+        document.body.dataset.baseUrl = "{{ url_for('officials.list_officials') }}".replace('/elected_officials', '');
+    </script>
 {% endblock %}
 
-{% block body %}
-    {{ super() }}
-    <div class="w-full min-h-screen px-4 py-20 sm:px-6 lg:px-8 lg:py-10">
+{% block content %}
+    <main class="w-full min-h-screen px-4 py-20 sm:px-6 lg:px-8 lg:py-10">
         <div class="mx-auto max-w-7xl">
             <!-- Header Section - Responsive -->
             <div class="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
@@ -155,11 +158,10 @@
                 {% endfor %}
             </div>
         </div>
-    </div>
+    </main>
 
     {% include 'partials/official_add_modal.html' %}
     {% include 'partials/official_edit_modal.html' %}
 
-    <script src="{{ url_for('static', filename='js/modal.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/officials.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/elected_officials.js') }}"></script>
 {% endblock %}
